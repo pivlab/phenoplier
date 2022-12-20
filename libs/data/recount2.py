@@ -408,7 +408,7 @@ class LVAnalysis(object):
         values = {}
         for col in data.columns.drop(self.lv_name):
             _tmp = data[[col, self.lv_name]].dropna()
-            _tmp = getattr(_tmp, func)()
+            _tmp = getattr(_tmp, func)(numeric_only=True)
             values[col] = _tmp[self.lv_name]
 
         return pd.Series(values).sort_values(ascending=False)
