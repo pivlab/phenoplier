@@ -2,11 +2,42 @@ import warnings
 import ast
 from functools import lru_cache
 from pathlib import Path
+import ssl
+from urllib3 import poolmanager
+
 import pandas as pd
+import requests
+from requests import adapters
 
 from entity import Gene
 from data.cache import read_data
 import conf
+
+
+class TLSAdapter(adapters.HTTPAdapter):
+    """
+    This class is used by requests to fix a problem with related to OpenSSL. I was getting this error when using
+    method LVAnalysis.get_experiments_data():
+
+        HTTPSConnectionPool(host='sciserver.org', port=443): Max retries exceeded with url:
+        /public-data/recount2/data/SRP060416/SRP060416.tsv (Caused by
+        SSLError(SSLError(1, '[SSL: WRONG_SIGNATURE_TYPE] wrong signature type (_ssl.c:997)')))
+
+    Taken and adapted from https://github.com/psf/requests/issues/4775#issuecomment-478198879
+    """
+
+    def init_poolmanager(self, connections, maxsize, block=False, **pool_kwargs):
+        """Create and initialize the urllib3 PoolManager."""
+        ctx = ssl.create_default_context()
+        ctx.set_ciphers("DEFAULT@SECLEVEL=1")
+        self.poolmanager = poolmanager.PoolManager(
+            num_pools=connections,
+            maxsize=maxsize,
+            block=block,
+            ssl_version=ssl.PROTOCOL_TLS,
+            ssl_context=ctx,
+            **pool_kwargs,
+        )
 
 
 class ExperimentDataReader(object):
@@ -28,13 +59,19 @@ class ExperimentDataReader(object):
 
     UNKNOWN_ATTRIBUTE_COLUMN_NAME = "[PHENOPLIER] Unknown attribute"
 
-    def __init__(self, srp_code: str, srp_dir: str, compact: bool = False):
+    def __init__(self, srp_code: str, srp_dir: Path | str, compact: bool = False):
         self.srp_code = srp_code
         self.srp_dir = Path(srp_dir).resolve()
         self.compact = compact
 
         self.srp_data_file = self.srp_dir / f"{self.srp_code}.tsv"
         self.characteristics_column_names = []
+
+    @staticmethod
+    def _get_requests_session():
+        session = requests.session()
+        session.mount("https://", TLSAdapter())
+        return session
 
     @property
     @lru_cache(maxsize=None)
@@ -116,13 +153,13 @@ class ExperimentDataReader(object):
 
         self.srp_dir.mkdir(exist_ok=True, parents=True)
 
-        import requests
-
         # download the file
         download_link = (
             f"http://duffel.rail.bio/recount/{self.srp_code}/{self.srp_code}.tsv"
         )
-        file_content = requests.get(download_link, allow_redirects=True)
+        file_content = ExperimentDataReader._get_requests_session().get(
+            download_link, allow_redirects=True
+        )
         with open(self.srp_data_file, "wb") as fh:
             fh.write(file_content.content)
 
@@ -388,7 +425,7 @@ class LVAnalysis(object):
         """
         It creates a boxplot with the LV values for all the categories for a one
         attribute of the data (such as "cell type"). For instance, if imp_f is
-        "tissue", this plot would have values such as "Heart", "Lung", etc in
+        "tissue", this plot would have values such as "Heart", "Lung", etc. in
         the x-axis, and the LV value in the y-axis. Values in the x-axis are
         sorted by their median.
 
@@ -404,7 +441,7 @@ class LVAnalysis(object):
             hue: same as in seaborn.boxplot function.
             study_id: SRP code to include (all the rest will be ignored). It is
                 useful when you want to explore patterns in a single project.
-            top_x_values: top attribute categories to include. By default all
+            top_x_values: top attribute categories to include. By default, all
                 are included.
             ax: matplotlib Axes, same as in seaborn.boxplot function.
 
