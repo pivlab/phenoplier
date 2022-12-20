@@ -62,8 +62,10 @@ MODES_ACTIONS = {
         "download_gene_map_id_to_name",
         "download_gene_map_name_to_id",
         "download_biomart_genes_hg38",
-        "download_multiplier_model_z_pkl",
         "download_snps_covariance_gtex_mashr",
+        "download_multiplier_model_z_pkl",
+        "download_multiplier_model_summary_pkl",
+        "download_multiplier_model_b_pkl",
     },
     "full": {},  # empty means all actions/methods
 }
