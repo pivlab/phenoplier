@@ -238,6 +238,10 @@ final_plot_data = plot_data.replace(
 )
 
 # %%
+# sorte index to avoid PerformanceWarning from pandas
+final_plot_data = final_plot_data.sort_index()
+
+# %%
 _srp_code = "SRP060416"
 _tmp = final_plot_data.loc[(_srp_code,)].apply(
     lambda x: x[SELECTED_ATTRIBUTE]
@@ -284,9 +288,6 @@ len(attr_order)
 
 # %%
 attr_order[:5]
-
-# %%
-final_plot_data.describe()
 
 # %% [markdown]
 # ## Plot
@@ -348,5 +349,82 @@ with sns.plotting_context("paper", font_scale=2.5), sns.axes_style("whitegrid"):
 # )
 
 # display(_tmp.head(60))
+
+# %% [markdown]
+# # Reduced plot
+
+# %% [markdown]
+# ## Data stats
+
+# %%
+plot_data_stats = final_plot_data.describe()[LV_NAME]
+display(plot_data_stats)
+
+# %%
+plot_data_stats_by_cell_type = (
+    final_plot_data.groupby(SELECTED_ATTRIBUTE)
+    .describe()[LV_NAME]
+    .sort_values("50%", ascending=False)
+)
+display(plot_data_stats_by_cell_type)
+
+# %%
+# keep cell types whose median is larger than the global median
+selected_cell_types = plot_data_stats_by_cell_type[
+    plot_data_stats_by_cell_type["50%"] > plot_data_stats.loc["50%"]
+].index
+display(selected_cell_types)
+
+# %%
+final_plot_data.shape
+
+# %%
+final_plot_data = final_plot_data[
+    final_plot_data[SELECTED_ATTRIBUTE].isin(selected_cell_types)
+]
+
+# %%
+final_plot_data.shape
+
+# %% [markdown]
+# ## Set x-axis order
+
+# %%
+attr_order = (
+    final_plot_data.groupby(SELECTED_ATTRIBUTE)
+    .median()
+    .sort_values(LV_NAME, ascending=False)
+    .index[:N_TOP_ATTRS]
+    .tolist()
+)
+
+# %%
+len(attr_order)
+
+# %%
+attr_order[:5]
+
+# %% [markdown]
+# ## Plot
+
+# %%
+with sns.plotting_context("paper", font_scale=2.5), sns.axes_style("whitegrid"):
+    g = sns.catplot(
+        data=final_plot_data,
+        y=LV_NAME,
+        x=SELECTED_ATTRIBUTE,
+        order=attr_order,
+        kind="box",
+        height=5,
+        aspect=2.5,
+    )
+    plt.xticks(rotation=45, horizontalalignment="right")
+    plt.xlabel("")
+
+    # plt.savefig(
+    #     OUTPUT_CELL_TYPE_FILEPATH,
+    #     bbox_inches="tight",
+    #     facecolor="white",
+    # )
 
 # %%
