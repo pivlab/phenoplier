@@ -174,9 +174,6 @@ lv_data.loc[["SRP033466"]].dropna(how="all", axis=1).sort_values(
     LV_NAME, ascending=False
 ).sort_values(LV_NAME, ascending=False).head(10)
 
-# %% [markdown]
-# **No cell types/tissues/cell lines** so not very interesting
-
 # %%
 SELECTED_ATTRIBUTE = "cell type"
 
@@ -267,9 +264,9 @@ if LV_AXIS_THRESHOLD is not None:
 # ## Delete samples with no tissue/cell type information
 
 # %%
-final_plot_data = final_plot_data[
-    final_plot_data[SELECTED_ATTRIBUTE] != "NOT CATEGORIZED"
-]
+# final_plot_data = final_plot_data[
+#     final_plot_data[SELECTED_ATTRIBUTE] != "NOT CATEGORIZED"
+# ]
 
 # %% [markdown]
 # ## Set x-axis order
@@ -371,7 +368,7 @@ display(plot_data_stats_by_cell_type)
 # %%
 # keep cell types whose median is larger than the global median
 selected_cell_types = plot_data_stats_by_cell_type[
-    plot_data_stats_by_cell_type["50%"] > plot_data_stats.loc["50%"]
+    (plot_data_stats_by_cell_type["50%"] > max(plot_data_stats.loc["50%"], 0.0))
 ].index
 display(selected_cell_types)
 
