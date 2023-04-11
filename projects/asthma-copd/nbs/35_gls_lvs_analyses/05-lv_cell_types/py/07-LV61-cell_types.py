@@ -39,10 +39,11 @@ import conf
 # # Settings
 
 # %% tags=["parameters"]
-LV_NAME = "LV70"
+LV_NAME = "LV61"
 
 # %%
 LV_AXIS_THRESHOLD = None  # 3.0
+# LV_AXIS_THRESHOLD = 2.0
 N_TOP_SAMPLES = 400
 N_TOP_ATTRS = 15
 
@@ -153,8 +154,8 @@ lv_attrs[
 _tmp = lv_data.loc[
     :,
     [
-        "cell type",
         "tissue",
+        "cell type",
         LV_NAME,
     ],
 ]
@@ -163,20 +164,20 @@ _tmp = lv_data.loc[
 _tmp_seq = list(chunker(_tmp.sort_values(LV_NAME, ascending=False), 25))
 
 # %%
-_tmp_seq[2]
+_tmp_seq[0]
 
 # %%
 # what is there in these projects?
-lv_data.loc[["SRP064464"]].dropna(how="all", axis=1).sort_values(
+lv_data.loc[["SRP056840"]].dropna(how="all", axis=1).sort_values(
     LV_NAME, ascending=False
 ).sort_values(LV_NAME, ascending=False).head(10)
 
 # %%
-SELECTED_ATTRIBUTE = "cell type"
+SELECTED_ATTRIBUTE = "tissue"
 
 # %%
 # it has to be in the order desired for filling nans in the SELECTED_ATTRIBUTE
-SECOND_ATTRIBUTES = ["tissue"]
+SECOND_ATTRIBUTES = ["cell type"]
 
 # %% [markdown]
 # ## Get plot data
@@ -210,6 +211,16 @@ plot_data.head(20)
 final_plot_data = plot_data.replace(
     {
         SELECTED_ATTRIBUTE: {
+            "human bone marrow sample": "bone marrow",
+            "whole blood": "Whole blood",
+            "peripheral blood": "Peripheral blood",
+            "peripheral whole blood": "Peripheral blood",
+            "": "",
+            # "breast cancer": "Breast cancer",
+            # "breast cancer cell line": "Breast cancer",
+            # SRP057196
+            # "fetal_replicating": "Fetal neurons (replicating)",
+            # "fetal_quiescent": "Fetal neurons (quiescent)",
             # "normal skin": "Skin",
             # "liver": "Liver",
             # "Human Skeletal Muscle Myoblasts (HSMM)": "Skeletal muscle myoblasts",
@@ -236,10 +247,29 @@ final_plot_data = plot_data.replace(
 final_plot_data = final_plot_data.sort_index()
 
 # %%
-# _srp_code = "SRP060416"
+_srp_code = "SRP050000"
+
+_tmp = final_plot_data.loc[(_srp_code,)].apply(
+    lambda x: "Whole blood"
+    + f" ({lv_data.loc[(_srp_code, x.name), 'sirs vs sepsis']})",
+    axis=1,
+)
+final_plot_data.loc[(_srp_code, _tmp.index), SELECTED_ATTRIBUTE] = _tmp.values
+
+# %%
+_srp_code = "SRP056840"
+
+_tmp = final_plot_data.loc[(_srp_code,)].apply(
+    lambda x: f"Whole blood (Sepsis)",
+    axis=1,
+)
+final_plot_data.loc[(_srp_code, _tmp.index), SELECTED_ATTRIBUTE] = _tmp.values
+
+# %%
+# _srp_code = "SRP062966"
 # _tmp = final_plot_data.loc[(_srp_code,)].apply(
 #     lambda x: x[SELECTED_ATTRIBUTE]
-#     + f" ({lv_data.loc[(_srp_code, x.name), 'facs gating']})",
+#     + f" ({lv_data.loc[(_srp_code, x.name), 'disease status']})",
 #     axis=1,
 # )
 # final_plot_data.loc[(_srp_code, _tmp.index), SELECTED_ATTRIBUTE] = _tmp.values
@@ -307,24 +337,24 @@ with sns.plotting_context("paper", font_scale=2.5), sns.axes_style("whitegrid"):
     # )
 
 # %%
-with sns.plotting_context("paper", font_scale=2.5), sns.axes_style("whitegrid"):
-    g = sns.catplot(
-        data=final_plot_data,
-        y=LV_NAME,
-        x=SELECTED_ATTRIBUTE,
-        order=attr_order,
-        kind="box",
-        height=5,
-        aspect=2.5,
-    )
-    plt.xticks(rotation=45, horizontalalignment="right")
-    plt.xlabel("")
+# with sns.plotting_context("paper", font_scale=2.5), sns.axes_style("whitegrid"):
+#     g = sns.catplot(
+#         data=final_plot_data,
+#         y=LV_NAME,
+#         x=SELECTED_ATTRIBUTE,
+#         order=attr_order,
+#         kind="box",
+#         height=5,
+#         aspect=2.5,
+#     )
+#     plt.xticks(rotation=45, horizontalalignment="right")
+#     plt.xlabel("")
 
-    # plt.savefig(
-    #     OUTPUT_CELL_TYPE_FILEPATH,
-    #     bbox_inches="tight",
-    #     facecolor="white",
-    # )
+#     # plt.savefig(
+#     #     OUTPUT_CELL_TYPE_FILEPATH,
+#     #     bbox_inches="tight",
+#     #     facecolor="white",
+#     # )
 
 # %% [markdown]
 # # Debug
@@ -333,15 +363,13 @@ with sns.plotting_context("paper", font_scale=2.5), sns.axes_style("whitegrid"):
 with pd.option_context(
     "display.max_rows", None, "display.max_columns", None, "display.max_colwidth", None
 ):
-    _tmp = final_plot_data[final_plot_data[SELECTED_ATTRIBUTE].str.contains("NOT CAT")]
+    _tmp = final_plot_data[final_plot_data[SELECTED_ATTRIBUTE].str.contains("peripheral blo")].sort_values(LV_NAME, ascending=False)
     display(_tmp.head(20))
 
 # %%
 # what is there in these projects?
-_tmp = (
-    lv_data.loc[["SRP002605"]]
-    .dropna(how="all", axis=1)
-    .sort_values(LV_NAME, ascending=False)
+_tmp = lv_data.loc[["SRP062966"]].dropna(how="all", axis=1).sort_values(
+    LV_NAME, ascending=False
 )
 
 display(_tmp.head(60))
