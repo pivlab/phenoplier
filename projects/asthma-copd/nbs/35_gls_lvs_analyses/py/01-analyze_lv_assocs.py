@@ -164,4 +164,84 @@ for lv_code in lv_assocs_by_size.index:
         _tmp = _tmp[_tmp["fdr"] < 0.05]
         display(_tmp)
 
+# %% [markdown]
+# # Summary of results
+
+# %% [markdown]
+# * LV101:
+#   * asthma and ACO
+#   * very clear: tonsil innate lymphoid cells (ILC3), NK, ILC2
+#   * PhenomeXcan:
+#     * hayfever, allergic rhinitis, eczema, asthma, eosinophils
+#   * eMERGE:
+#     * None
+#
+# * LV70:
+#   * asthma and COPD
+#   * Tissues:
+#     * It's very hard to find a single tissue for this LV
+#     * at the top are: blastocysts, keratinocytes, lung adenocarcinoma, etc
+#     * Human skeletal muscle myoblasts (RA)
+#       * there is a lot of variation here, but it is not possible to sepearate after reading the paper.
+#   * PhenomeXcan:
+#     * rheumatoid arthritis (RA), basophil/neutrophil count, neutrophil count, medication: methotrexate (cancer, RA)
+#   * eMERGE:
+#     * Emphysema (496.1), diseases of white blood cells (288)
+#
+# * LV948:
+#   * asthma and ACO
+#   * very similar to LV101
+#   * PhenomeXcan:
+#     * very similar to LV101 + Cronh's disease + inflammatory bowel disease + ulcerative colitis
+#   * eMERGE:
+#     * None
+#
+# * LV705:
+#   * asthma and ACO
+#   * very clear T cell signature when stimulated and also tonsil innate lymphoid cells (NK) (no ILC as in LV101)
+#   * PhenomeXcan:
+#     * very similar to LV948
+#   * eMERGE:
+#     * None
+#
+# * LV504:
+#   * COPD and ACO
+#   * lung, but very weak signal
+#   * PhenomeXcan:
+#     * number of cigarettes currently smoked daily
+#   * eMERGE:
+#     * ahterosclerosis of the extremeties (440.*)
+#
+# * LV207:
+#   * asthma
+#   * very strong breast cancer signal
+#   * PhenomeXcan:
+#     * neutrophil count and percentage, age of asthma diagnosed, white blood cell count
+#   * eMERGE:
+#     * None
+#
+# * LV61:
+#   * asthma (ACO has FDR of 0.60 and unadjusted p-value of 0.026).
+#   * whole blood
+#   * PhenomeXcan:
+#     * basophil count, medication: methotrexate, RA, Adult-onset Still disease, asthma
+#   * eMERGE:
+#     * None
+#
+# * LV149:
+#   * COPD (VERY INTERESTING!)
+#   * TISSUES
+#   * PhenomeXcan:
+#     * blood clot in the leg (DVT, deep venous thrombosis, number of cigarettes, emphysema
+#   * eMERGE:
+#     * Coagulation defects (286), other venous embolism and thrombosis (452)
+#
+# * LVXXX:
+#   * ASSOCS
+#   * TISSUES
+#   * PhenomeXcan:
+#     * ASSOCS
+#   * eMERGE:
+#     * ASSOC
+
 # %%
