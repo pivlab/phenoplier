@@ -230,11 +230,35 @@ for lv_code in lv_assocs_by_size.index:
 #
 # * LV149:
 #   * COPD (VERY INTERESTING!)
-#   * TISSUES
+#   * mostly expressed in embryonic kidney cell lines with single-site and multi-site mutations (something like that)
 #   * PhenomeXcan:
 #     * blood clot in the leg (DVT, deep venous thrombosis, number of cigarettes, emphysema
 #   * eMERGE:
 #     * Coagulation defects (286), other venous embolism and thrombosis (452)
+#
+# * LV844:
+#   * asthma (ACO has FDR of 0.27 and unadjusted p-value of 0.006). 
+#   * TISSUES
+#   * PhenomeXcan:
+#     * polymyalgia rheumatica, type 1 diabetes, age diabetes diagnosed, RA, insulin medication, coeliac disease
+#   * eMERGE:
+#     * None
+#
+# * LV803:
+#   * asthma (COPD has unadjusted p-value of 0.053)
+#   * tonsil (similar to LV101) + brain cell types
+#   * PhenomeXcan:
+#     * RA, HDL cholesterol, Adult-onset Still disease, keratometry measurements
+#   * eMERGE:
+#     * None
+#
+# * LV799:
+#   * COPD (ACO unadjusted p-value of 0.043)
+#   * Blood, peripheral blood, multiple myeloma
+#   * PhenomeXcan:
+#     * cigarettes smoked, lung cancer (father), Pericarditis
+#   * eMERGE:
+#     * None
 #
 # * LVXXX:
 #   * ASSOCS
