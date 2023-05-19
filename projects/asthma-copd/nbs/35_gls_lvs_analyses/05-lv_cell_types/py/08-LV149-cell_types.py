@@ -285,7 +285,7 @@ if LV_AXIS_THRESHOLD is not None:
 # %%
 attr_order = (
     final_plot_data.groupby(SELECTED_ATTRIBUTE)
-    .median()
+    .max()
     .sort_values(LV_NAME, ascending=False)
     .index[:N_TOP_ATTRS]
     .tolist()
