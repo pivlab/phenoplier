@@ -270,7 +270,7 @@ for lv_code in lv_assocs_by_size.index:
 #
 # * LV180:
 #   * COPD (asthma and ACO pvalue > 0.30)
-#   * TISSUES
+#   * Glima + lung fibrobasts cells, hard hard to see
 #   * PhenomeXcan:
 #     * smoking, number of cigarettes
 #   * eMERGE:
