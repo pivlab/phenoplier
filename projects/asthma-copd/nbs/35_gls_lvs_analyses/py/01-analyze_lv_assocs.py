@@ -324,6 +324,14 @@ for lv_code in lv_assocs_by_size.index:
 #   * eMERGE:
 #     * None
 #
+# * LV444:
+#   * asthma and ACO (pvalue 0.003)
+#   * melanocytes, tonsil (ILC3, ILC2, ILC1), glioma + lung fibroblasts, brain cell types
+#   * PhenomeXcan:
+#     * asthma, eosinophils, hayfever
+#   * eMERGE:
+#     * None
+#
 # * LVXXX:
 #   * ASSOCS
 #   * TISSUES
