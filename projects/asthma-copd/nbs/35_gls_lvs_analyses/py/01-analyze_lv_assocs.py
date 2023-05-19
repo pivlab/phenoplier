@@ -129,6 +129,9 @@ for idx, grp in signif_lv_assocs.groupby("phenotype"):
 lv_assocs_by_size = signif_lv_assocs.groupby("lv").size().sort_values(ascending=False)
 display(lv_assocs_by_size)
 
+# %%
+lv_assocs_by_size.shape
+
 # %% [markdown]
 # # Take top LVs and show all associations
 
@@ -161,7 +164,7 @@ for lv_code in lv_assocs_by_size.index:
 
         display(HTML(f"<h3>eMERGE</h3>"))
         _tmp = gls_emerge[gls_emerge["lv"] == lv_code].sort_values("pvalue")
-        _tmp = _tmp[_tmp["fdr"] < 0.05]
+        _tmp = _tmp[_tmp["fdr"] < 0.20]
         display(_tmp)
 
 # %% [markdown]
