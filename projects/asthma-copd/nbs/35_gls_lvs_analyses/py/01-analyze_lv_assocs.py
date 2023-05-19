@@ -292,6 +292,14 @@ for lv_code in lv_assocs_by_size.index:
 #   * eMERGE:
 #     * Disorders of refraction and accommodation; blindness and low vision
 #
+# * LV214:
+#   * COPD (rest has pvalue > 0.30)
+#   * Glioma + breast cancer, tonsil ILC3 NK ILC1 ILC2
+#   * PhenomeXcan:
+#     * smoking
+#   * eMERGE:
+#     * None
+#
 # * LVXXX:
 #   * ASSOCS
 #   * TISSUES
