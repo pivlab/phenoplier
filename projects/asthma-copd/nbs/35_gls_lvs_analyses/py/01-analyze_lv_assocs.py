@@ -284,13 +284,13 @@ for lv_code in lv_assocs_by_size.index:
 #   * eMERGE:
 #     * Atherosclerosis of the extremities
 #
-# * LVXXX:
-#   * ASSOCS
-#   * TISSUES
+# * LV563:
+#   * ACO (asthma has pvalue <0.02)
+#   * tonsil, but weird plot, with outliers, some astrocytes, fetal neocortex and other brain cell types
 #   * PhenomeXcan:
-#     * ASSOCS
+#     * age asthma diagnosed, height
 #   * eMERGE:
-#     * ASSOC
+#     * Disorders of refraction and accommodation; blindness and low vision
 #
 # * LVXXX:
 #   * ASSOCS
