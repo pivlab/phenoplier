@@ -260,6 +260,38 @@ for lv_code in lv_assocs_by_size.index:
 #   * eMERGE:
 #     * None
 #
+# * LV17:
+#   * asthma (ACO has unadjusted p-value of 0.048, and COPD 0.43)
+#   * tonsil, simillar to LV101, but here NK are ate the top, and then ILC1 and ILC3, ILC2 comes very behind
+#   * PhenomeXcan:
+#     * wheeze, eosinophil, asthma, RA, hayfever/allergic rhinitis
+#   * eMERGE:
+#     * None
+#
+# * LV180:
+#   * COPD (asthma and ACO pvalue > 0.30)
+#   * TISSUES
+#   * PhenomeXcan:
+#     * smoking, number of cigarettes
+#   * eMERGE:
+#     * None
+#
+# * LVXXX:
+#   * ASSOCS
+#   * TISSUES
+#   * PhenomeXcan:
+#     * ASSOCS
+#   * eMERGE:
+#     * ASSOC
+#
+# * LVXXX:
+#   * ASSOCS
+#   * TISSUES
+#   * PhenomeXcan:
+#     * ASSOCS
+#   * eMERGE:
+#     * ASSOC
+#
 # * LVXXX:
 #   * ASSOCS
 #   * TISSUES
