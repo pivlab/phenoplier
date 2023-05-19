@@ -348,6 +348,14 @@ for lv_code in lv_assocs_by_size.index:
 #   * eMERGE:
 #     * None
 #
+# * LV247:
+#   * COPD, ACO pvalue 0.022
+#   * skeletal muscle and skeletal muscle, lung fibroblasts, breeast cancer, glioma, tonsil (ILC3), brain cell types
+#   * PhenomeXcan:
+#     * hair color/light brown/black/blonde, cigarettes, schizophrenia, age first facial hair
+#   * eMERGE:
+#     * None
+#
 # * LVXXX:
 #   * ASSOCS
 #   * TISSUES
