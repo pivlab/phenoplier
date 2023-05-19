@@ -42,7 +42,7 @@ import conf
 LV_NAME = "LV504"
 
 # %%
-LV_AXIS_THRESHOLD = None  # 3.0
+LV_AXIS_THRESHOLD = 1.5  # 3.0
 # LV_AXIS_THRESHOLD = 2.0
 N_TOP_SAMPLES = 400
 N_TOP_ATTRS = 15
@@ -249,6 +249,15 @@ _tmp = final_plot_data.loc[(_srp_code,)].apply(
 final_plot_data.loc[(_srp_code, _tmp.index), SELECTED_ATTRIBUTE] = _tmp.values
 
 # %%
+_srp_code = "SRP060416"
+_tmp = final_plot_data.loc[(_srp_code,)].apply(
+    lambda x: x[SELECTED_ATTRIBUTE]
+    + f" ({lv_data.loc[(_srp_code, x.name), 'facs gating']})",
+    axis=1,
+)
+final_plot_data.loc[(_srp_code, _tmp.index), SELECTED_ATTRIBUTE] = _tmp.values
+
+# %%
 # # take the top samples only
 # final_plot_data = final_plot_data.sort_values(LV_NAME, ascending=False)[:N_TOP_SAMPLES]
 
@@ -337,12 +346,12 @@ with sns.plotting_context("paper", font_scale=2.5), sns.axes_style("whitegrid"):
 with pd.option_context(
     "display.max_rows", None, "display.max_columns", None, "display.max_colwidth", None
 ):
-    _tmp = final_plot_data[final_plot_data[SELECTED_ATTRIBUTE].str.contains("fetal_")].sort_values(LV_NAME, ascending=False)
+    _tmp = final_plot_data[final_plot_data[SELECTED_ATTRIBUTE].str.contains("^NOT CATEGORIZED$")].sort_values(LV_NAME, ascending=False)
     display(_tmp.head(20))
 
 # %%
 # what is there in these projects?
-_tmp = lv_data.loc[["SRP057196"]].dropna(how="all", axis=1).sort_values(
+_tmp = lv_data.loc[["SRP059643"]].dropna(how="all", axis=1).sort_values(
     LV_NAME, ascending=False
 )
 
