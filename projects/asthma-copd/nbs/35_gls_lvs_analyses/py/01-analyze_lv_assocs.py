@@ -332,6 +332,14 @@ for lv_code in lv_assocs_by_size.index:
 #   * eMERGE:
 #     * None
 #
+# * LV383:
+#   * COPD (not rest)
+#   * tonsil, glioma, brain cell types, hard to see
+#   * PhenomeXcan:
+#     * smoking, hair color/light brown, lung cancer
+#   * eMERGE:
+#     * None
+#
 # * LVXXX:
 #   * ASSOCS
 #   * TISSUES
