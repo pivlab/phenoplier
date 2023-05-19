@@ -270,19 +270,19 @@ for lv_code in lv_assocs_by_size.index:
 #
 # * LV180:
 #   * COPD (asthma and ACO pvalue > 0.30)
-#   * Glima + lung fibrobasts cells, hard hard to see
+#   * Glima + lung fibrobasts cells, hard to see
 #   * PhenomeXcan:
 #     * smoking, number of cigarettes
 #   * eMERGE:
 #     * None
 #
-# * LVXXX:
-#   * ASSOCS
-#   * TISSUES
+# * LV696:
+#   * COPD, rest has pvalue > 0.40
+#   * glioma + breast and lung cells, some tonsil ILC3 ILC2 ILC1, hard to see
 #   * PhenomeXcan:
-#     * ASSOCS
+#     * smoking
 #   * eMERGE:
-#     * ASSOC
+#     * Atherosclerosis of the extremities
 #
 # * LVXXX:
 #   * ASSOCS
