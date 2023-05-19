@@ -300,6 +300,14 @@ for lv_code in lv_assocs_by_size.index:
 #   * eMERGE:
 #     * None
 #
+# * LV506:
+#   * asthma (rest has pvalue > 0.10 for ACO, and < 0.50 for COPD)
+#   * Glioma + lung fibroblast cells, breast cancer, tonsil ILC3 NK ILC2
+#   * PhenomeXcan:
+#     * neutrophil count, RA, polymyalgia rheumatica
+#   * eMERGE:
+#     * None
+#
 # * LVXXX:
 #   * ASSOCS
 #   * TISSUES
