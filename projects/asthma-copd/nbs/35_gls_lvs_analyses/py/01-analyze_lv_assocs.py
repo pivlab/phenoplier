@@ -308,6 +308,14 @@ for lv_code in lv_assocs_by_size.index:
 #   * eMERGE:
 #     * None
 #
+# * LV140:
+#   * asthma (rest pvalue > 0.35)
+#   * clear whole blood signature, with immune cells mostly or infected samples
+#   * PhenomeXcan:
+#     * polymyalgia rheumatica, dental problems, basophil percentage, IBD, polycythaemia vera, ulcerative colitis
+#   * eMERGE:
+#     * None
+#
 # * LVXXX:
 #   * ASSOCS
 #   * TISSUES
