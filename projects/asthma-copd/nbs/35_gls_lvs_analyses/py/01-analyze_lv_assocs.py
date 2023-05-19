@@ -316,6 +316,14 @@ for lv_code in lv_assocs_by_size.index:
 #   * eMERGE:
 #     * None
 #
+# * LV455:
+#   * COPD (rest have pvalues > 0.75)
+#   * hard to see, HEK, brain cell types and cerebral organoids, glioma
+#   * PhenomeXcan:
+#     * smoking, chronic bronchitis/emphysema, Alzheimer's disease
+#   * eMERGE:
+#     * None
+#
 # * LVXXX:
 #   * ASSOCS
 #   * TISSUES
