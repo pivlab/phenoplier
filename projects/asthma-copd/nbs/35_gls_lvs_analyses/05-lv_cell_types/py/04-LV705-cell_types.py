@@ -353,7 +353,7 @@ if LV_AXIS_THRESHOLD is not None:
 # %%
 attr_order = (
     final_plot_data.groupby(SELECTED_ATTRIBUTE)
-    .median()
+    .max()
     .sort_values(LV_NAME, ascending=False)
     .index[:N_TOP_ATTRS]
     .tolist()
@@ -415,12 +415,12 @@ with sns.plotting_context("paper", font_scale=2.5), sns.axes_style("whitegrid"):
 with pd.option_context(
     "display.max_rows", None, "display.max_columns", None, "display.max_colwidth", None
 ):
-    _tmp = final_plot_data[final_plot_data[SELECTED_ATTRIBUTE].str.contains(" \(NK\)")].sort_values(LV_NAME, ascending=False)
+    _tmp = final_plot_data[final_plot_data[SELECTED_ATTRIBUTE].str.contains("^NOT CATEGORIZED$")].sort_values(LV_NAME, ascending=False)
     display(_tmp.head(20))
 
 # %%
 # what is there in these projects?
-_tmp = lv_data.loc[["SRP060416"]].dropna(how="all", axis=1).sort_values(
+_tmp = lv_data.loc[["SRP053186"]].dropna(how="all", axis=1).sort_values(
     LV_NAME, ascending=False
 )
 
