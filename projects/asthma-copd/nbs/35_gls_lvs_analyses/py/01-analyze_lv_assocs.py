@@ -340,6 +340,14 @@ for lv_code in lv_assocs_by_size.index:
 #   * eMERGE:
 #     * None
 #
+# * LV300:
+#   * COPD, asthma pvalue 0.027
+#   * glima + lung fibroblasts, tonsil (ILC3), cortex
+#   * PhenomeXcan:
+#     * cigarettes, RA, eczema/dermatitis
+#   * eMERGE:
+#     * None
+#
 # * LVXXX:
 #   * ASSOCS
 #   * TISSUES
