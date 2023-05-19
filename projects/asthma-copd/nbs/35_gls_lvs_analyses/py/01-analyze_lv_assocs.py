@@ -356,11 +356,11 @@ for lv_code in lv_assocs_by_size.index:
 #   * eMERGE:
 #     * None
 #
-# * LVXXX:
-#   * ASSOCS
-#   * TISSUES
+# * LV96:
+#   * asthma and ACO (pvalue 0.003)
+#   * very clear tonsil signature: ILC2, ILC1, ILC3... NK to a very less extent.
 #   * PhenomeXcan:
-#     * ASSOCS
+#     * asthma, hayfever/allergic rhinitis/eczema, lymphocyte percentage, wheeze
 #   * eMERGE:
 #     * ASSOC
 
