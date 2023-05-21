@@ -249,6 +249,32 @@ final_plot_data = plot_data.replace(
 final_plot_data = final_plot_data.sort_index()
 
 # %%
+_srp_code = "SRP064464"
+_tmp = final_plot_data.loc[(_srp_code,)].apply(
+    lambda x: f"Pancreatic islets"
+    + f" ({lv_data.loc[(_srp_code, x.name), 'assigned cell type']})",
+    axis=1,
+)
+final_plot_data.loc[(_srp_code, _tmp.index), SELECTED_ATTRIBUTE] = _tmp.values
+
+# %%
+_srp_code = "SRP027015"
+_tmp = final_plot_data.loc[(_srp_code,)].apply(
+    lambda x: "Peripheral blood (Myeloma / MM.1S)",
+    # + f" ({lv_data.loc[(_srp_code, x.name), 'facs gating']})",
+    axis=1,
+)
+final_plot_data.loc[(_srp_code, _tmp.index), SELECTED_ATTRIBUTE] = _tmp.values
+
+# %%
+_srp_code = "SRP050499"
+_tmp = final_plot_data.loc[(_srp_code,)].apply(
+    lambda x: f"Primordial germ cells (PGC)",
+    axis=1,
+)
+final_plot_data.loc[(_srp_code, _tmp.index), SELECTED_ATTRIBUTE] = _tmp.values
+
+# %%
 # add also tissue information to these projects
 _srp_code = "SRP050892"
 
@@ -260,10 +286,15 @@ _tmp = final_plot_data.loc[(_srp_code,)].apply(
 final_plot_data.loc[(_srp_code, _tmp.index), SELECTED_ATTRIBUTE] = _tmp.values
 
 # %%
-final_plot_data[SELECTED_ATTRIBUTE] = final_plot_data.apply(
-    lambda x: "Myeloma cells" if x.name[0] in ("SRP027015",) else x["cell type"],
-    axis=1,
-)
+# I don't know the cell type of this: https://trace.ncbi.nlm.nih.gov/Traces/index.html?view=study&acc=SRP059643
+# there are some samples that have high values, but it is impossible to know the cell types/cell lines (three were used in the study)
+final_plot_data = final_plot_data.drop(("SRP059643",))
+
+# %%
+# final_plot_data[SELECTED_ATTRIBUTE] = final_plot_data.apply(
+#     lambda x: "Myeloma cells" if x.name[0] in ("SRP027015",) else x["cell type"],
+#     axis=1,
+# )
 
 # %%
 # # take the top samples only

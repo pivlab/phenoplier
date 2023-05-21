@@ -497,12 +497,12 @@ with sns.plotting_context("paper", font_scale=2.5), sns.axes_style("whitegrid"):
 with pd.option_context(
     "display.max_rows", None, "display.max_columns", None, "display.max_colwidth", None
 ):
-    _tmp = final_plot_data[final_plot_data[SELECTED_ATTRIBUTE].str.contains("^neurons$")].sort_values(LV_NAME, ascending=False)
+    _tmp = final_plot_data[final_plot_data[SELECTED_ATTRIBUTE].str.contains("^NOT CATEGORIZED$")].sort_values(LV_NAME, ascending=False)
     display(_tmp.head(20))
 
 # %%
 # what is there in these projects?
-_tmp = lv_data.loc[["SRP057196"]].dropna(how="all", axis=1).sort_values(
+_tmp = lv_data.loc[["SRP057205"]].dropna(how="all", axis=1).sort_values(
     LV_NAME, ascending=False
 )
 
