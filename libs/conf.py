@@ -424,6 +424,10 @@ if EXTERNAL["GTEX_V8_DIR"] is not None:
 PROJECTS_DIR = Path(ROOT_DIR, "projects").resolve()
 PROJECTS = {}
 
+#
+# Applications of PhenoPLIER to specific projects/traits
+#
+
 # Asthma-COPD Overlap Syndrome (ACOS)
 PROJECTS["ASTHMA_COPD"] = {}
 PROJECTS["ASTHMA_COPD"]["BASE_DIR"] = Path(PROJECTS_DIR, "asthma-copd").resolve()
@@ -435,6 +439,19 @@ PROJECTS["ASTHMA_COPD"]["TRAITS_INFO_FILE"] = Path(
 ).resolve()
 PROJECTS["ASTHMA_COPD"]["RESULTS_DIR"] = Path(
     PROJECTS["ASTHMA_COPD"]["BASE_DIR"], "results"
+).resolve()
+
+# Chronotype
+PROJECTS["CHRONOTYPE"] = {}
+PROJECTS["CHRONOTYPE"]["BASE_DIR"] = Path(PROJECTS_DIR, "chronotype").resolve()
+PROJECTS["CHRONOTYPE"]["DATA_DIR"] = Path(
+    PROJECTS["CHRONOTYPE"]["BASE_DIR"], "data"
+).resolve()
+PROJECTS["CHRONOTYPE"]["TRAITS_INFO_FILE"] = Path(
+    CODE_DIR, "projects", "chronotype", "traits_info.csv"
+).resolve()
+PROJECTS["CHRONOTYPE"]["RESULTS_DIR"] = Path(
+    PROJECTS["CHRONOTYPE"]["BASE_DIR"], "results"
 ).resolve()
 
 
