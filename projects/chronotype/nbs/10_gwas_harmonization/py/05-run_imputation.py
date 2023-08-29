@@ -2,11 +2,11 @@
 # jupyter:
 #   jupytext:
 #     cell_metadata_filter: all,-execution,-papermill,-trusted
+#     notebook_metadata_filter: -jupytext.text_representation.jupytext_version
 #     text_representation:
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.0
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -43,10 +43,12 @@ import conf
 PHENOPLIER_NOTEBOOK_FILEPATH = None
 PHENOPLIER_NOTEBOOK_DIR = os.getcwd()
 
+PROJECTS_TRAIT_KEY = "CHRONOTYPE"
+
 # %% tags=["injected-parameters"]
 # Parameters
 PHENOPLIER_NOTEBOOK_FILEPATH = (
-    "projects/asthma-copd/nbs/10_gwas_harmonization/05-run_imputation.ipynb"
+    "projects/chronotype/nbs/10_gwas_harmonization/05-run_imputation.ipynb"
 )
 
 
@@ -57,7 +59,7 @@ if PHENOPLIER_NOTEBOOK_FILEPATH is not None:
 display(PHENOPLIER_NOTEBOOK_DIR)
 
 # %% tags=[]
-OUTPUT_DIR = conf.PROJECTS["ASTHMA_COPD"]["RESULTS_DIR"] / "imputed_gwas"
+OUTPUT_DIR = conf.PROJECTS[PROJECTS_TRAIT_KEY]["RESULTS_DIR"] / "imputed_gwas"
 display(OUTPUT_DIR)
 
 OUTPUT_DIR_STR = str(OUTPUT_DIR)
@@ -66,12 +68,16 @@ display(OUTPUT_DIR_STR)
 # %% [markdown] tags=[]
 # # Run
 
-# %% tags=[] magic_args="-s \"$PHENOPLIER_NOTEBOOK_DIR\" \"$OUTPUT_DIR_STR\"" language="bash"
+# %% tags=[] magic_args="-s \"$PHENOPLIER_NOTEBOOK_DIR\" \"$PROJECTS_TRAIT_KEY\" \"$OUTPUT_DIR_STR\"" language="bash"
 # set -euo pipefail
 # # IFS=$'\n\t'
 #
 # # read the notebook directory parameter and remove $1
 # export PHENOPLIER_NOTEBOOK_DIR="${PHENOPLIER_CODE_DIR}/$1"
+# shift
+#
+# # read trait key
+# export PROJECTS_TRAIT_KEY="$1"
 # shift
 #
 # # read output dir
@@ -89,9 +95,9 @@ display(OUTPUT_DIR_STR)
 #     # commas (,). So here I split those into different variables.
 #     IFS=',' read -r pheno_id file sample_size n_cases chromosome batch_id <<< "$1"
 #
-#     INPUT_FILENAME="${file%.*}"
-#
 #     N_BATCHES=10
+#
+#     INPUT_FILENAME="${file%.*}"
 #
 #     # IMPUTED_GWAS_DIR="${PHENOPLIER_PROJECTS_ASTHMA_COPD_RESULTS_DIR}/imputed_gwas"
 #     # INPUTED_GWAS_FILE_PATTERN="${INPUT_FILENAME}-harmonized"
@@ -99,7 +105,8 @@ display(OUTPUT_DIR_STR)
 #     # get input GWAS file, there should be a single file
 #     # here I make sure that there are no other files in the folder that
 #     # match this phenotype/trait filename prefix
-#     GWAS_DIR="${PHENOPLIER_PROJECTS_ASTHMA_COPD_RESULTS_DIR}/harmonized_gwas"
+#     env_name="PHENOPLIER_PROJECTS_${PROJECTS_TRAIT_KEY}_RESULTS_DIR"
+#     GWAS_DIR="${!env_name}/harmonized_gwas"
 #     N_GWAS_FILES=$(ls ${GWAS_DIR}/${INPUT_FILENAME}*.txt | wc -l)
 #     if [ "${N_GWAS_FILES}" != "1" ]; then
 #         echo "ERROR: found ${N_GWAS_FILES} GWAS files instead of one"
@@ -147,6 +154,7 @@ display(OUTPUT_DIR_STR)
 #
 # # generate a list of run_job calls for GNU Parallel
 # # here I read a file with information about traits (one trait per line)
+# env_name="PHENOPLIER_PROJECTS_${PROJECTS_TRAIT_KEY}_TRAITS_INFO_FILE"
 # while IFS= read -r line; do
 #     for chromosome in {1..22}; do
 #         for batch_id in {0..9}; do
@@ -156,7 +164,7 @@ display(OUTPUT_DIR_STR)
 #         done
 #         # break
 #     done
-# done < <(tail -n "+2" "${PHENOPLIER_PROJECTS_ASTHMA_COPD_TRAITS_INFO_FILE}") |
+# done < <(tail -n "+2" "${!env_name}") |
 #     parallel -k --lb --halt 2 -j${PHENOPLIER_GENERAL_N_JOBS}
 
 # %% [markdown] tags=[]
