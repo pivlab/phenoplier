@@ -48,7 +48,7 @@ PROJECTS_TRAIT_KEY = "CHRONOTYPE"
 # %% tags=["injected-parameters"]
 # Parameters
 PHENOPLIER_NOTEBOOK_FILEPATH = (
-    "projects/asthma-copd/nbs/10_gwas_harmonization/01-run_harmonization.ipynb"
+    "projects/chronotype/nbs/10_gwas_harmonization/01-run_harmonization.ipynb"
 )
 
 
@@ -95,19 +95,24 @@ display(OUTPUT_DIR_STR)
 #     # commas (,). So here I split those into different variables.
 #     IFS=',' read -r pheno_id file sample_size n_cases <<< "$1"
 #
-#     INPUT_FILENAME="${file%.*}"
+# #     INPUT_FILENAME="${file%.*}"
+# #
+# #     # get input GWAS file, there should be a single file
+# #     # here I make sure that there are no other files in the folder that
+# #     # match this phenotype/trait filename prefix
+# #     env_name="PHENOPLIER_PROJECTS_${PROJECTS_TRAIT_KEY}_DATA_DIR"
+# #     GWAS_DIR="${!env_name}/gwas"
+# #     N_GWAS_FILES=$(ls ${GWAS_DIR}/${INPUT_FILENAME}* | wc -l)
+# #     if [ "${N_GWAS_FILES}" != "1" ]; then
+# #         echo "ERROR: found ${N_GWAS_FILES} GWAS files instead of one"
+# #         exit 1
+# #     fi
+# #     INPUT_GWAS_FILEPATH=$(ls ${GWAS_DIR}/${INPUT_FILENAME}*)
 #
-#     # get input GWAS file, there should be a single file
-#     # here I make sure that there are no other files in the folder that
-#     # match this phenotype/trait filename prefix
 #     env_name="PHENOPLIER_PROJECTS_${PROJECTS_TRAIT_KEY}_DATA_DIR"
 #     GWAS_DIR="${!env_name}/gwas"
-#     N_GWAS_FILES=$(ls ${GWAS_DIR}/${INPUT_FILENAME}* | wc -l)
-#     if [ "${N_GWAS_FILES}" != "1" ]; then
-#         echo "ERROR: found ${N_GWAS_FILES} GWAS files instead of one"
-#         exit 1
-#     fi
-#     INPUT_GWAS_FILEPATH=$(ls ${GWAS_DIR}/${INPUT_FILENAME}*)
+#
+#     INPUT_GWAS_FILEPATH="${GWAS_DIR}/${file}"
 #
 #     mkdir -p "${OUTPUT_DIR}"
 #
@@ -123,20 +128,23 @@ display(OUTPUT_DIR_STR)
 #
 #     bash "${PHENOPLIER_CODE_DIR}/scripts/gwas_harmonize.sh" \
 #         --input-gwas-file "${INPUT_GWAS_FILEPATH}" \
-#         --samples-n-cases "${n_cases}" \
+#         --sample-size "${sample_size}" \
+#         --sample-n-cases "${n_cases}" \
 #         --liftover-chain-file "${PHENOPLIER_GENERAL_LIFTOVER_HG19_TO_HG38}" \
 #         --output-dir "${OUTPUT_DIR}"
 #
 #     # print errors here in the notebook
-#     # first, look for the log file for this trait
-#     pattern="${OUTPUT_DIR}/${INPUT_FILENAME}*.log"
+#     LOG_FILE="${INPUT_GWAS_FILEPATH}.log"
 #
-#     N_LOG_FILES=$(ls ${pattern} | wc -l)
-#     if [ "${N_LOG_FILES}" != "1" ]; then
-#         echo "ERROR: found ${N_LOG_FILES} log files instead of one"
-#         exit 1
-#     fi
-#     LOG_FILE=$(ls ${pattern})
+# #     # first, look for the log file for this trait
+# #     pattern="${OUTPUT_DIR}/${INPUT_FILENAME}*.log"
+# #
+# #     N_LOG_FILES=$(ls ${pattern} | wc -l)
+# #     if [ "${N_LOG_FILES}" != "1" ]; then
+# #         echo "ERROR: found ${N_LOG_FILES} log files instead of one"
+# #         exit 1
+# #     fi
+# #     LOG_FILE=$(ls ${pattern})
 #
 #     cat "${LOG_FILE}" | grep -iE "warning|error"
 #
