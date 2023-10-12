@@ -48,15 +48,15 @@ N_TOP_SAMPLES = 400
 N_TOP_ATTRS = 15
 
 # %%
-# OUTPUT_FIGURES_DIR = Path(
-#     conf.MANUSCRIPT["FIGURES_DIR"], "lvs_analysis", f"{LV_NAME.lower()}"
-# ).resolve()
-# display(OUTPUT_FIGURES_DIR)
-# OUTPUT_FIGURES_DIR.mkdir(parents=True, exist_ok=True)
+OUTPUT_FIGURES_DIR = Path(
+    conf.MANUSCRIPT["FIGURES_DIR"], "lvs_analysis", f"{LV_NAME.lower()}"
+).resolve()
+display(OUTPUT_FIGURES_DIR)
+OUTPUT_FIGURES_DIR.mkdir(parents=True, exist_ok=True)
 
 # %%
-# OUTPUT_CELL_TYPE_FILEPATH = OUTPUT_FIGURES_DIR / f"{LV_NAME.lower()}-cell_types.svg"
-# display(OUTPUT_CELL_TYPE_FILEPATH)
+OUTPUT_CELL_TYPE_FILEPATH = OUTPUT_FIGURES_DIR / f"{LV_NAME.lower()}-cell_types.svg"
+display(OUTPUT_CELL_TYPE_FILEPATH)
 
 # %% [markdown] tags=[]
 # # Load MultiPLIER summary
@@ -363,12 +363,12 @@ with sns.plotting_context("paper", font_scale=2.5), sns.axes_style("whitegrid"):
 with pd.option_context(
     "display.max_rows", None, "display.max_columns", None, "display.max_colwidth", None
 ):
-    _tmp = final_plot_data[final_plot_data[SELECTED_ATTRIBUTE].str.contains("peripheral blo")].sort_values(LV_NAME, ascending=False)
+    _tmp = final_plot_data[final_plot_data[SELECTED_ATTRIBUTE].str.contains("Blood")].sort_values(LV_NAME, ascending=False)
     display(_tmp.head(20))
 
 # %%
 # what is there in these projects?
-_tmp = lv_data.loc[["SRP062966"]].dropna(how="all", axis=1).sort_values(
+_tmp = lv_data.loc[["SRP058654"]].dropna(how="all", axis=1).sort_values(
     LV_NAME, ascending=False
 )
 
@@ -403,22 +403,54 @@ display(selected_cell_types)
 final_plot_data.shape
 
 # %%
-final_plot_data = final_plot_data[
+reduced_plot_data = final_plot_data[
     final_plot_data[SELECTED_ATTRIBUTE].isin(selected_cell_types)
 ]
 
 # %%
-final_plot_data.shape
+reduced_plot_data.shape
+
+# %% [markdown]
+# ## Shorten context names
+
+# %%
+reduced_plot_data = reduced_plot_data.replace(
+    {
+        SELECTED_ATTRIBUTE: {
+            "tonsil Innate lymphoid cells (ILC3)": "tonsil ILCs (ILC3)",
+            "tonsil Innate lymphoid cells (NK)": "tonsil ILCs (NK)",
+            "tonsil Innate lymphoid cells (ILC2)": "tonsil ILCs (ILC2)",
+            "tonsil Innate lymphoid cells (ILC1)": "tonsil ILCs (ILC1)",
+            "primary human NK cells": "NK cells",
+            "primary human neutrophils": "Neutrophils",
+            "Primary Monocytes(rest cell population after CD14+ selection)(BC14)": "PBMC",
+            "bone marrow mononuclear cells (BM MNC)": "PBMC",
+        }
+    }
+)
+
+# %%
+reduced_plot_data = reduced_plot_data[
+    ~reduced_plot_data[SELECTED_ATTRIBUTE].isin((
+        "NOT CATEGORIZED",
+        "hybrid",
+        "fixed cell",
+        "Blood",
+    ))
+]
+
+# %%
+reduced_plot_data.shape
 
 # %% [markdown]
 # ## Set x-axis order
 
 # %%
 attr_order = (
-    final_plot_data.groupby(SELECTED_ATTRIBUTE)
-    .median()
+    reduced_plot_data.groupby(SELECTED_ATTRIBUTE)
+    .max()
     .sort_values(LV_NAME, ascending=False)
-    .index[:N_TOP_ATTRS]
+    .index[:8]
     .tolist()
 )
 
@@ -426,7 +458,7 @@ attr_order = (
 len(attr_order)
 
 # %%
-attr_order[:5]
+attr_order
 
 # %% [markdown]
 # ## Plot
@@ -434,21 +466,21 @@ attr_order[:5]
 # %%
 with sns.plotting_context("paper", font_scale=2.5), sns.axes_style("whitegrid"):
     g = sns.catplot(
-        data=final_plot_data,
+        data=reduced_plot_data,
         y=LV_NAME,
         x=SELECTED_ATTRIBUTE,
         order=attr_order,
         kind="box",
         height=5,
-        aspect=2.5,
+        aspect=1.5,
     )
     plt.xticks(rotation=45, horizontalalignment="right")
     plt.xlabel("")
 
-    # plt.savefig(
-    #     OUTPUT_CELL_TYPE_FILEPATH,
-    #     bbox_inches="tight",
-    #     facecolor="white",
-    # )
+    plt.savefig(
+        OUTPUT_CELL_TYPE_FILEPATH,
+        bbox_inches="tight",
+        facecolor="white",
+    )
 
 # %%

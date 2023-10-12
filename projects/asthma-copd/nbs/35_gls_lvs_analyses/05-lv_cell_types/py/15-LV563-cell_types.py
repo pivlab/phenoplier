@@ -48,15 +48,15 @@ N_TOP_SAMPLES = 400
 N_TOP_ATTRS = 15
 
 # %%
-# OUTPUT_FIGURES_DIR = Path(
-#     conf.MANUSCRIPT["FIGURES_DIR"], "lvs_analysis", f"{LV_NAME.lower()}"
-# ).resolve()
-# display(OUTPUT_FIGURES_DIR)
-# OUTPUT_FIGURES_DIR.mkdir(parents=True, exist_ok=True)
+OUTPUT_FIGURES_DIR = Path(
+    conf.MANUSCRIPT["FIGURES_DIR"], "lvs_analysis", f"{LV_NAME.lower()}"
+).resolve()
+display(OUTPUT_FIGURES_DIR)
+OUTPUT_FIGURES_DIR.mkdir(parents=True, exist_ok=True)
 
 # %%
-# OUTPUT_CELL_TYPE_FILEPATH = OUTPUT_FIGURES_DIR / f"{LV_NAME.lower()}-cell_types.svg"
-# display(OUTPUT_CELL_TYPE_FILEPATH)
+OUTPUT_CELL_TYPE_FILEPATH = OUTPUT_FIGURES_DIR / f"{LV_NAME.lower()}-cell_types.svg"
+display(OUTPUT_CELL_TYPE_FILEPATH)
 
 # %% [markdown] tags=[]
 # # Load MultiPLIER summary
@@ -239,6 +239,9 @@ final_plot_data = plot_data.replace(
             # "BAT": "Brown adipose tissue",
             # "Uninvolved Breast Tissue Adjacent to ER+ Primary Tumor": "Breast tissue adjacent to ER+ tumor",
             # "ovarian granulosa cells": "Ovarian granulosa cells",
+            "primary human NK cells": "NK cells",
+            "primary human B cells": "B cells",
+            "B-cells": "B cells",
         }
     }
 )
@@ -257,13 +260,13 @@ _tmp = final_plot_data.loc[(_srp_code,)].apply(
 final_plot_data.loc[(_srp_code, _tmp.index), SELECTED_ATTRIBUTE] = _tmp.values
 
 # %%
-_srp_code = "SRP064464"
-_tmp = final_plot_data.loc[(_srp_code,)].apply(
-    lambda x: f"Pancreatic islets"
-    + f" ({lv_data.loc[(_srp_code, x.name), 'assigned cell type']})",
-    axis=1,
-)
-final_plot_data.loc[(_srp_code, _tmp.index), SELECTED_ATTRIBUTE] = _tmp.values
+# _srp_code = "SRP064464"
+# _tmp = final_plot_data.loc[(_srp_code,)].apply(
+#     lambda x: f"Pancreatic islets"
+#     + f" ({lv_data.loc[(_srp_code, x.name), 'assigned cell type']})",
+#     axis=1,
+# )
+# final_plot_data.loc[(_srp_code, _tmp.index), SELECTED_ATTRIBUTE] = _tmp.values
 
 # %%
 # _srp_code = "SRP045500"
@@ -423,9 +426,10 @@ plot_data_stats_by_cell_type = (
 display(plot_data_stats_by_cell_type)
 
 # %%
-# keep cell types whose median is larger than the global median
+# keep cell types whose count is not too low and median is larger than the global median
 selected_cell_types = plot_data_stats_by_cell_type[
-    (plot_data_stats_by_cell_type["50%"] > max(plot_data_stats.loc["50%"], 0.0))
+    (plot_data_stats_by_cell_type["count"] > 5)
+    & (plot_data_stats_by_cell_type["50%"] > max(plot_data_stats.loc["50%"], 0.0))
 ].index
 display(selected_cell_types)
 
@@ -433,22 +437,54 @@ display(selected_cell_types)
 final_plot_data.shape
 
 # %%
-final_plot_data = final_plot_data[
+reduced_plot_data = final_plot_data[
     final_plot_data[SELECTED_ATTRIBUTE].isin(selected_cell_types)
 ]
 
 # %%
-final_plot_data.shape
+reduced_plot_data.shape
+
+# %% [markdown]
+# ## Shorten context names
+
+# %%
+reduced_plot_data = reduced_plot_data.replace(
+    {
+        SELECTED_ATTRIBUTE: {
+            "tonsil Innate lymphoid cells (ILC3)": "tonsil ILCs (ILC3)",
+            "tonsil Innate lymphoid cells (NK)": "tonsil ILCs (NK)",
+            "tonsil Innate lymphoid cells (ILC2)": "tonsil ILCs (ILC2)",
+            "tonsil Innate lymphoid cells (ILC1)": "tonsil ILCs (ILC1)",
+            "primary human NK cells": "NK cells",
+            "primary human neutrophils": "Neutrophils",
+            "Head and Neck Squamous Cell Carcinoma cells": "Squamous Cell Carcinoma cells",
+            "NG2-sorted cell from blood of melanoma patient": "Blood (melanoma)",
+            "ER+ Breast Cancer Primary Tumor": "Breast Cancer (ER+)",
+        }
+    }
+)
+
+# %%
+reduced_plot_data = reduced_plot_data[
+    ~reduced_plot_data[SELECTED_ATTRIBUTE].isin((
+        "NOT CATEGORIZED",
+        "hybrid",
+        "fixed cell",
+    ))
+]
+
+# %%
+reduced_plot_data.shape
 
 # %% [markdown]
 # ## Set x-axis order
 
 # %%
 attr_order = (
-    final_plot_data.groupby(SELECTED_ATTRIBUTE)
-    .median()
+    reduced_plot_data.groupby(SELECTED_ATTRIBUTE)
+    .max()
     .sort_values(LV_NAME, ascending=False)
-    .index[:N_TOP_ATTRS]
+    .index[:8]
     .tolist()
 )
 
@@ -456,7 +492,7 @@ attr_order = (
 len(attr_order)
 
 # %%
-attr_order[:5]
+attr_order
 
 # %% [markdown]
 # ## Plot
@@ -464,21 +500,21 @@ attr_order[:5]
 # %%
 with sns.plotting_context("paper", font_scale=2.5), sns.axes_style("whitegrid"):
     g = sns.catplot(
-        data=final_plot_data,
+        data=reduced_plot_data,
         y=LV_NAME,
         x=SELECTED_ATTRIBUTE,
         order=attr_order,
         kind="box",
         height=5,
-        aspect=2.5,
+        aspect=1.8,
     )
     plt.xticks(rotation=45, horizontalalignment="right")
     plt.xlabel("")
 
-    # plt.savefig(
-    #     OUTPUT_CELL_TYPE_FILEPATH,
-    #     bbox_inches="tight",
-    #     facecolor="white",
-    # )
+    plt.savefig(
+        OUTPUT_CELL_TYPE_FILEPATH,
+        bbox_inches="tight",
+        facecolor="white",
+    )
 
 # %%
