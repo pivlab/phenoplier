@@ -379,6 +379,7 @@ display(plot_data_stats_by_cell_type)
 # keep cell types whose median is larger than the global median
 selected_cell_types = plot_data_stats_by_cell_type[
     (plot_data_stats_by_cell_type["50%"] > max(plot_data_stats.loc["50%"], 0.0))
+    & (plot_data_stats_by_cell_type["count"] > 5)
 ].index
 display(selected_cell_types)
 
@@ -399,7 +400,7 @@ final_plot_data.shape
 # %%
 attr_order = (
     final_plot_data.groupby(SELECTED_ATTRIBUTE)
-    .median()
+    .max()
     .sort_values(LV_NAME, ascending=False)
     .index[:N_TOP_ATTRS]
     .tolist()

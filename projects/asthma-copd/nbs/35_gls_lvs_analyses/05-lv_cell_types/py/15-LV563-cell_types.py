@@ -477,7 +477,54 @@ reduced_plot_data = reduced_plot_data[
 reduced_plot_data.shape
 
 # %% [markdown]
-# ## Set x-axis order
+# ## Sort by median
+
+# %% [markdown]
+# ### Set x-axis order
+
+# %%
+attr_order = (
+    reduced_plot_data.groupby(SELECTED_ATTRIBUTE)
+    .median()
+    .sort_values(LV_NAME, ascending=False)
+    .index[:8]
+    .tolist()
+)
+
+# %%
+len(attr_order)
+
+# %%
+attr_order
+
+# %% [markdown]
+# ### Plot
+
+# %%
+with sns.plotting_context("paper", font_scale=2.5), sns.axes_style("whitegrid"):
+    g = sns.catplot(
+        data=reduced_plot_data,
+        y=LV_NAME,
+        x=SELECTED_ATTRIBUTE,
+        order=attr_order,
+        kind="box",
+        height=5,
+        aspect=1.8,
+    )
+    plt.xticks(rotation=45, horizontalalignment="right")
+    plt.xlabel("")
+
+    plt.savefig(
+        OUTPUT_CELL_TYPE_FILEPATH,
+        bbox_inches="tight",
+        facecolor="white",
+    )
+
+# %% [markdown]
+# ## Sort by max
+
+# %% [markdown]
+# ### Set x-axis order
 
 # %%
 attr_order = (
@@ -495,7 +542,7 @@ len(attr_order)
 attr_order
 
 # %% [markdown]
-# ## Plot
+# ### Plot
 
 # %%
 with sns.plotting_context("paper", font_scale=2.5), sns.axes_style("whitegrid"):
