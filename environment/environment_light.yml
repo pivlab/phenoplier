@@ -1,0 +1,23 @@
+name: phenoplier_light
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - fastparquet=0.8.*
+  - ipython
+  - numpy=1.23.*
+  - pandas=1.5.*
+  - papermill=2.3.*
+  - pip
+  - openpyxl=3.0.*
+  - pytables=3.7.*
+  - python=3.10.*
+  - python-snappy=0.6.*
+  - pyyaml=6.0.*
+  - requests=2.*
+  - scikit-learn=1.1.*
+  - scipy=1.9.*
+  - statsmodels=0.13.*
+  - tabulate=0.9.*
+  - tqdm=4.64.*
+
