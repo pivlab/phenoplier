@@ -29,21 +29,18 @@ Finally, run this command:
   --apiendpoint=https://gen3.theanvil.io
 ```
 
-
-# Load Penn's LPC-specific paths and PhenoPLIER configuration
-
-Change paths accordingly.
+# Load Alpine-specific paths and PhenoPLIER configuration
 
 ```bash
 # load conda environment
-module load miniconda/3
-conda activate ~/software/conda_envs/phenoplier_light/
+module load mambaforge/23.1.0-1
+mamba activate phenoplier_light
 
-# load LPC-specific paths
-. ~/projects/phenoplier/scripts/pmacs_penn/env.sh
+# load PhenoPLIER config
+. /pl/active/pivlab/projects/mpividori/phenoplier/scripts/alpine/env.sh
 
 # load in bash session all PhenoPLIER environmental variables
-eval `python ~/projects/phenoplier/libs/conf.py`
+eval `python ${PHENOPLIER_CODE_DIR}/libs/conf.py`
 
 # make sure they were loaded correctly
 # should output something like /project/...
@@ -65,7 +62,7 @@ bash 01_05-download.sh
 
 ```bash
 mkdir -p _tmp
-cat 01_10-samples_ancestry.sh | bsub
+cat 01_10-samples_ancestry.sh | sbatch
 ```
 
 ## Genotype dosage
