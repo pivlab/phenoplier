@@ -1,16 +1,17 @@
 #!/bin/bash
-# BSUB -J genotype_dosage
-# BSUB -cwd _tmp/
-# BSUB -oo genotype_dosage%I.%J.out
-# BSUB -eo genotype_dosage%I.%J.error
-# -#BSUB -u miltondp@gmail.com
-# -#BSUB -N
-# BSUB -n 1
-# BSUB -R "rusage[mem=5GB]"
-# BSUB -M 5GB
-# BSUB -W 24:00
 
-module load bcftools/1.12
+#SBATCH --partition=amilan
+#SBATCH --job-name=genotype_dosage
+#SBATCH --output=genotype_dosage.%j.out
+#SBATCH --time=12:00:00
+#SBATCH --qos=normal
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --mem=32GB
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=milton.pividori@cuanschutz.edu
+
+module load bcftools/1.16
 
 # make sure we use the number of CPUs specified
 export PHENOPLIER_N_JOBS=1
