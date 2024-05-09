@@ -23,10 +23,10 @@ CODE_DIR=${PHENOPLIER_CODE_DIR}/nbs/15_gsa_gls/20-null_simulations/10_gwas_harmo
 GWAS_DIR="${PHENOPLIER_RESULTS_GLS_NULL_SIMS}/gwas"
 OUTPUT_DIR="${PHENOPLIER_RESULTS_GLS_NULL_SIMS}/harmonized_gwas"
 
-GWAS_JOBINDEX=`expr $LSB_JOBINDEX - 1`
+GWAS_JOBINDEX=${pheno_id}
 
 bash ${CODE_DIR}/01_harmonize.sh \
   --input-gwas-file ${GWAS_DIR}/random.pheno${GWAS_JOBINDEX}.glm.linear.tsv.gz \
-  --liftover-chain-file /project/ritchie20/projects/phenoplier/base/data/liftover/chains/hg19ToHg38.over.chain.gz \
+  --liftover-chain-file ${PHENOPLIER_GENERAL_LIFTOVER_HG19_TO_HG38} \
   --output-dir ${OUTPUT_DIR}
 

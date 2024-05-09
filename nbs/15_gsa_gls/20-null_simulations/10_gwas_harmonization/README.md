@@ -46,8 +46,10 @@ The `_tmp` folder stores logs and needs to be created.
 
 ## Harmonization
 ```bash
-mkdir -p _tmp/harmonization
-cat cluster_jobs/01_harmonization_job.sh | bsub
+for pheno_id in {0..999}; do
+  export pheno_id
+  cat cluster_jobs/01_harmonization_job-template.sh | envsubst '${pheno_id}' | bsub
+done
 ```
 
 The `check_jobs.sh` script could be used also to quickly assess which jobs failed (given theirs logs):

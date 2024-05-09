@@ -70,9 +70,9 @@ if [ ! -f ${PYTHON_EXECUTABLE} ]; then
     exit 1
 fi
 
-A1000G_VARIANTS_METADATA_FILE="${PHENOPLIER_PHENOMEXCAN_LD_BLOCKS_1000G_GENOTYPE_DIR}/variant_metadata.txt.gz"
-if [ ! -f ${A1000G_VARIANTS_METADATA_FILE} ]; then
-    >&2 echo "The 1000 Genomes variants metadata file does not exist: ${A1000G_VARIANTS_METADATA_FILE}"
+VARIANTS_METADATA_FILE="${PHENOPLIER_PHENOMEXCAN_LD_BLOCKS_GTEX_V8_GENOTYPE_DIR}/variant_metadata.txt.gz"
+if [ ! -f ${VARIANTS_METADATA_FILE} ]; then
+    >&2 echo "The variants metadata file does not exist: ${VARIANTS_METADATA_FILE}"
     exit 1
 fi
 
@@ -86,7 +86,7 @@ OUTPUT_FILENAME=${INPUT_GWAS_FILENAME%.*}
 ${PYTHON_EXECUTABLE} ${PHENOPLIER_GWAS_IMPUTATION_BASE_DIR}/src/gwas_parsing.py \
     -gwas_file ${INPUT_GWAS_FILE} \
     -separator $'\t' \
-    -snp_reference_metadata ${A1000G_VARIANTS_METADATA_FILE} METADATA \
+    -snp_reference_metadata ${VARIANTS_METADATA_FILE} METADATA \
     --chromosome_format \
     -output_column_map "#CHROM" chromosome \
     -output_column_map ID variant_id \
