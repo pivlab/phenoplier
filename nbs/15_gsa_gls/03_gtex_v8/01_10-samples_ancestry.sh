@@ -1,14 +1,15 @@
 #!/bin/bash
-# BSUB -J samples_ancestry
-# BSUB -cwd _tmp/
-# BSUB -oo samples_ancestry%I.%J.out
-# BSUB -eo samples_ancestry%I.%J.error
-# -#BSUB -u miltondp@gmail.com
-# -#BSUB -N
-# BSUB -n 1
-# BSUB -R "rusage[mem=1GB]"
-# BSUB -M 1GB
-# BSUB -W 0:10
+
+#SBATCH --partition=amilan
+#SBATCH --job-name=samples_ancestry
+#SBATCH --output=samples_ancestry.%j.out
+#SBATCH --time=1:00:00
+#SBATCH --qos=normal
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --mem=32GB
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=milton.pividori@cuanschutz.edu
 
 # make sure we use the number of CPUs specified
 export PHENOPLIER_N_JOBS=1
@@ -19,6 +20,13 @@ export NUMEXPR_NUM_THREADS=1
 export OMP_NUM_THREADS=1
 
 CODE_DIR=${PHENOPLIER_CODE_DIR}/nbs/15_gsa_gls/03_gtex_v8
+
+module purge
+module load mambaforge/23.1.0-1
+conda activate phenoplier_light
+
+. ${PHENOPLIER_CODE_DIR}/scripts/alpine/env.sh
+eval `python ${PHENOPLIER_CODE_DIR}/libs/conf.py`
 
 # Generate the GTEx ancestry file
 python << END
