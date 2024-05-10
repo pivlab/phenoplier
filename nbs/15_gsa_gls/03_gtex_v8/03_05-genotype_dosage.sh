@@ -3,7 +3,7 @@
 #SBATCH --partition=amilan
 #SBATCH --job-name=genotype_dosage
 #SBATCH --output=genotype_dosage.%j.out
-#SBATCH --time=12:00:00
+#SBATCH --time=18:00:00
 #SBATCH --qos=normal
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
