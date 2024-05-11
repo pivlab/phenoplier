@@ -91,9 +91,9 @@ if [ ! -f ${PYTHON_EXECUTABLE} ]; then
     exit 1
 fi
 
-A1000G_VARIANTS_METADATA_FILE="${PHENOPLIER_PHENOMEXCAN_LD_BLOCKS_1000G_GENOTYPE_DIR}/variant_metadata.parquet"
-if [ ! -f ${A1000G_VARIANTS_METADATA_FILE} ]; then
-    >&2 echo "The 1000 Genomes variants metadata file does not exist: ${A1000G_VARIANTS_METADATA_FILE}"
+VARIANTS_METADATA_FILE="${PHENOPLIER_PHENOMEXCAN_LD_BLOCKS_GTEX_V8_GENOTYPE_DIR}/variants_metadata.parquet"
+if [ ! -f ${VARIANTS_METADATA_FILE} ]; then
+    >&2 echo "The variants metadata file does not exist: ${VARIANTS_METADATA_FILE}"
     exit 1
 fi
 
@@ -107,8 +107,8 @@ OUTPUT_FILENAME_PREFIX=${INPUT_GWAS_FILENAME%.*}-imputed
 ${PYTHON_EXECUTABLE} ${PHENOPLIER_GWAS_IMPUTATION_BASE_DIR}/src/gwas_summary_imputation.py \
     -by_region_file ${PHENOPLIER_GENERAL_EUR_LD_REGIONS_FILE} \
     -gwas_file ${INPUT_GWAS_FILE} \
-    -parquet_genotype ${PHENOPLIER_PHENOMEXCAN_LD_BLOCKS_1000G_GENOTYPE_DIR}/chr${CHROMOSOME}.variants.parquet \
-    -parquet_genotype_metadata ${A1000G_VARIANTS_METADATA_FILE} \
+    -parquet_genotype ${PHENOPLIER_PHENOMEXCAN_LD_BLOCKS_GTEX_V8_GENOTYPE_DIR}/chr${CHROMOSOME}.variants.parquet \
+    -parquet_genotype_metadata ${VARIANTS_METADATA_FILE} \
     -window 100000 \
     -parsimony 7 \
     -chromosome ${CHROMOSOME} \

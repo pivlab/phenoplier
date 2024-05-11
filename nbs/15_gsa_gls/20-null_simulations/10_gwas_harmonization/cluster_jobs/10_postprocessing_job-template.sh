@@ -1,14 +1,14 @@
 #!/bin/bash
-#BSUB -J random_pheno[1-1000]
-#BSUB -cwd _tmp/postprocessing
-#BSUB -oo random_pheno%I.%J.out
-#BSUB -eo random_pheno%I.%J.error
-#-#BSUB -u miltondp@gmail.com
-#-#BSUB -N
-#BSUB -n 1
-#BSUB -R "rusage[mem=10GB]"
-#BSUB -M 10GB
-#BSUB -W 0:30
+#SBATCH --partition=amilan
+#SBATCH --job-name=random_pheno${pheno_id}
+#SBATCH --output=_tmp/postprocessing/random_pheno${pheno_id}.%j.out
+#SBATCH --time=00:30:00
+#SBATCH --qos=normal
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --mem=10GB
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=milton.pividori@cuanschutz.edu
 
 # make sure we use the number of CPUs specified
 export n_jobs=1
@@ -24,11 +24,10 @@ HARMONIZED_GWAS_DIR="${PHENOPLIER_RESULTS_GLS_NULL_SIMS}/harmonized_gwas"
 IMPUTED_GWAS_DIR="${PHENOPLIER_RESULTS_GLS_NULL_SIMS}/imputed_gwas"
 OUTPUT_DIR="${PHENOPLIER_RESULTS_GLS_NULL_SIMS}/post_imputed_gwas"
 
-GWAS_JOBINDEX=`expr $LSB_JOBINDEX - 1`
+GWAS_JOBINDEX=${pheno_id}
 
 bash ${CODE_DIR}/10_postprocess.sh \
   --input-gwas-file ${HARMONIZED_GWAS_DIR}/random.pheno${GWAS_JOBINDEX}.glm.linear.tsv-harmonized.txt \
   --imputed-gwas-folder ${IMPUTED_GWAS_DIR} \
   --phenotype-name random.pheno${GWAS_JOBINDEX}.glm \
   --output-dir ${OUTPUT_DIR}
-

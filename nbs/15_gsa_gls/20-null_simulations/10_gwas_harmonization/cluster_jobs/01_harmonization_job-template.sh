@@ -1,14 +1,14 @@
 #!/bin/bash
-#BSUB -J random_pheno[1-1000]
-#BSUB -cwd _tmp/harmonization
-#BSUB -oo random_pheno%I.%J.out
-#BSUB -eo random_pheno%I.%J.error
-#-#BSUB -u miltondp@gmail.com
-#-#BSUB -N
-#BSUB -n 1
-#BSUB -R "rusage[mem=8GB]"
-#BSUB -M 8GB
-#BSUB -W 0:15
+#SBATCH --partition=amilan
+#SBATCH --job-name=random_pheno${pheno_id}
+#SBATCH --output=_tmp/harmonization/random_pheno${pheno_id}.%j.out
+#SBATCH --time=00:15:00
+#SBATCH --qos=normal
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --mem=8GB
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=milton.pividori@cuanschutz.edu
 
 # make sure we use the number of CPUs specified
 export n_jobs=1

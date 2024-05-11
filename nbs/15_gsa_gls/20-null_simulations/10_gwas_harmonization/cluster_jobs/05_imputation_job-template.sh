@@ -1,17 +1,14 @@
 #!/bin/bash
-#BSUB -J random_pheno${pheno_id}-${chromosome}-${batch_id}
-#BSUB -cwd _tmp/imputation
-#BSUB -oo random_pheno${pheno_id}-${chromosome}-${batch_id}.%J.out
-#BSUB -eo random_pheno${pheno_id}-${chromosome}-${batch_id}.%J.error
-#-#BSUB -u miltondp@gmail.com
-#-#BSUB -N
-#BSUB -n 1
-#BSUB -R "rusage[mem=10GB]"
-#BSUB -M 10GB
-#BSUB -W 0:45
-
-# IMPORTANT: this is not a ready-for-submission script, it's a template.
-#   see README.md to know how to generate the actual job scripts.
+#SBATCH --partition=amilan
+#SBATCH --job-name=random_pheno${pheno_id}-${chromosome}-${batch_id}
+#SBATCH --output=_tmp/imputation/random_pheno${pheno_id}-${chromosome}-${batch_id}.%j.out
+#SBATCH --time=00:45:00
+#SBATCH --qos=normal
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --mem=10GB
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=milton.pividori@cuanschutz.edu
 
 # make sure we use the number of CPUs specified
 export n_jobs=1

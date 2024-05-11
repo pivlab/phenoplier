@@ -4,20 +4,18 @@ This folder has the scripts to run the harmonization and imputation process acro
 It uses a standard pipeline for this task: https://github.com/hakyimlab/summary-gwas-imputation 
 
 
-# Load Penn's LPC-specific paths and PhenoPLIER configuration
-
-Change paths accordingly.
+# Load Alpine-specific paths and PhenoPLIER configuration
 
 ```bash
 # load conda environment
-module load miniconda/3
-conda activate ~/software/conda_envs/phenoplier_light/
+module load mambaforge/23.1.0-1
+mamba activate phenoplier_light
 
-# load LPC-specific paths
-. ~/projects/phenoplier/scripts/pmacs_penn/env.sh
+# load PhenoPLIER config
+. /pl/active/pivlab/projects/mpividori/phenoplier/scripts/alpine/env.sh
 
 # load in bash session all PhenoPLIER environmental variables
-eval `python ~/projects/phenoplier/libs/conf.py`
+eval `python ${PHENOPLIER_CODE_DIR}/libs/conf.py`
 
 # make sure they were loaded correctly
 # should output something like /project/...
@@ -26,6 +24,9 @@ echo $PHENOPLIER_ROOT_DIR
 
 
 # Download the necessary data
+
+**NOTE:** We download the 1000G Genotype data, but we actually used GTEx v8 (you have
+to request access).
 
 ```bash
 python ~/projects/phenoplier/environment/scripts/setup_data.py \
@@ -48,7 +49,7 @@ The `_tmp` folder stores logs and needs to be created.
 ```bash
 for pheno_id in {0..999}; do
   export pheno_id
-  cat cluster_jobs/01_harmonization_job-template.sh | envsubst '${pheno_id}' | bsub
+  cat cluster_jobs/01_harmonization_job-template.sh | envsubst '${pheno_id}' | sbatch
 done
 ```
 
@@ -78,7 +79,7 @@ for pheno_id in {0..999}; do
   for chromosome in {1..22}; do
     for batch_id in {0..9}; do
       export pheno_id chromosome batch_id
-      cat cluster_jobs/05_imputation_job-template.sh | envsubst '${pheno_id} ${chromosome} ${batch_id}' | bsub
+      cat cluster_jobs/05_imputation_job-template.sh | envsubst '${pheno_id} ${chromosome} ${batch_id}' | sbatch
     done
   done
 done
@@ -139,7 +140,7 @@ missing_jobs[:10]
 for pheno_id, chromosome, batch_id in missing_jobs:
   os.system(
     f"export pheno_id={pheno_id} chromosome={chromosome} batch_id={batch_id}; " +
-    "cat cluster_jobs/05_imputation_job-template.sh | envsubst '${pheno_id} ${chromosome} ${batch_id}' | bsub"
+    "cat cluster_jobs/05_imputation_job-template.sh | envsubst '${pheno_id} ${chromosome} ${batch_id}' | sbatch"
   )
 ```
 
@@ -150,8 +151,10 @@ Try to increment the maximum time limit for the job (in the job template file) a
 ## Post-processing
 
 ```bash
-mkdir -p _tmp/postprocessing
-cat cluster_jobs/10_postprocessing_job.sh | bsub
+for pheno_id in {0..999}; do
+  export pheno_id
+  cat cluster_jobs/10_postprocessing_job-template.sh | envsubst '${pheno_id}' | sbatch
+done
 ```
 
 Check logs with:
@@ -239,7 +242,11 @@ with open(POST_IMPUTED_DIR / "common_variant_ids.pkl", 'wb') as f:
 
 ```bash
 mkdir -p _tmp/common_var_ids
-cat cluster_jobs/15-common_variant_ids_job.sh | bsub
+
+for pheno_id in {0..999}; do
+  export pheno_id
+  cat cluster_jobs/15-common_variant_ids_job-template.sh | envsubst '${pheno_id}' | sbatch
+done
 ```
 
 Checks:
