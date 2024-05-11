@@ -22,6 +22,8 @@ eval `python ${PHENOPLIER_CODE_DIR}/libs/conf.py`
 echo $PHENOPLIER_ROOT_DIR
 ```
 
+In Alpine, run `acompile` to get a node before submitting jobs.
+
 
 # Download the necessary data
 

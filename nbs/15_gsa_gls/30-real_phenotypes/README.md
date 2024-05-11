@@ -31,6 +31,8 @@ eval `python ~/projects/phenoplier/libs/conf.py`
 echo $PHENOPLIER_ROOT_DIR
 ```
 
+In Alpine, run `acompile` to get a node before submitting jobs.
+
 ### Desktop computer
 
 Set the executor to bash:
