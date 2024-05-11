@@ -3,20 +3,18 @@
 This folder has the scripts to run the PrediXcan family of methods on GWAS on randomly generated phenotypes (`../10_gwas_harmonization`).
 
 
-# Load Penn's LPC-specific paths and PhenoPLIER configuration
-
-Change paths accordingly.
+# Load Alpine-specific paths and PhenoPLIER configuration
 
 ```bash
 # load conda environment
-module load miniconda/3
-conda activate ~/software/conda_envs/phenoplier_light/
+module load mambaforge/23.1.0-1
+mamba activate phenoplier_light
 
-# load LPC-specific paths
-. ~/projects/phenoplier/scripts/pmacs_penn/env.sh
+# load PhenoPLIER config
+. /pl/active/pivlab/projects/mpividori/phenoplier/scripts/alpine/env.sh
 
 # load in bash session all PhenoPLIER environmental variables
-eval `python ~/projects/phenoplier/libs/conf.py`
+eval `python ${PHENOPLIER_CODE_DIR}/libs/conf.py`
 
 # make sure they were loaded correctly
 # should output something like /project/...
@@ -58,7 +56,7 @@ mkdir -p _tmp/spredixcan
 for pheno_id in {0..999}; do
   for tissue in ${PHENOPLIER_PHENOMEXCAN_PREDICTION_MODELS_MASHR_TISSUES}; do
     export pheno_id tissue
-    cat cluster_jobs/01_spredixcan_job-template.sh | envsubst '${pheno_id} ${tissue}' | bsub
+    cat cluster_jobs/01_spredixcan_job-template.sh | envsubst '${pheno_id} ${tissue}' | sbatch
   done
 done
 ```
@@ -85,7 +83,11 @@ If any job failed, check `../10_gwas_harmonization/README.md`, which has python 
 
 ```bash
 mkdir -p _tmp/smultixcan
-cat cluster_jobs/05_smultixcan_job.sh | bsub
+
+for pheno_id in {0..999}; do
+  export pheno_id
+  cat cluster_jobs/05_smultixcan_job-template.sh | envsubst '${pheno_id}' | sbatch
+done
 ```
 
 The `check_jobs.sh` script could be used also to quickly assess which jobs failed (given theirs logs):

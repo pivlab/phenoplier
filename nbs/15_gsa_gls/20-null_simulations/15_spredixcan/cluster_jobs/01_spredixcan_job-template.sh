@@ -1,17 +1,14 @@
 #!/bin/bash
-# BSUB -J random_pheno${pheno_id}-${tissue}
-# BSUB -cwd _tmp/spredixcan
-# BSUB -oo random_pheno${pheno_id}-${tissue}.%J.out
-# BSUB -eo random_pheno${pheno_id}-${tissue}.%J.error
-# -#BSUB -u miltondp@gmail.com
-# -#BSUB -N
-# BSUB -n 1
-# BSUB -R "rusage[mem=5GB]"
-# BSUB -M 5GB
-# BSUB -W 0:15
-
-# IMPORTANT: this is not a ready-for-submission script, it's a template.
-#   see README.md to know how to generate the actual job scripts.
+#SBATCH --partition=amilan
+#SBATCH --job-name=random_pheno${pheno_id}-${tissue}
+#SBATCH --output=_tmp/spredixcan/random_pheno${pheno_id}-${tissue}.%j.out
+#SBATCH --time=00:15:00
+#SBATCH --qos=normal
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --mem=5GB
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=milton.pividori@cuanschutz.edu
 
 # make sure we use the number of CPUs specified
 export n_jobs=1
