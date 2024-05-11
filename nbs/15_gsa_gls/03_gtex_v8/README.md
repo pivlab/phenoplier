@@ -69,20 +69,20 @@ cat 01_10-samples_ancestry.sh | sbatch
 
 ```bash
 mkdir -p _tmp
-cat 03_05-genotype_dosage.sh | bsub
+cat 03_05-genotype_dosage.sh | sbatch
 ```
 
 ## Variant selection
 
 ```bash
 mkdir -p _tmp
-cat 05_05-variant_selection.sh | bsub
+cat 05_05-variant_selection.sh | sbatch
 ```
 
 ## Genotype compilation
 
 ```bash
 mkdir -p _tmp
-cat 07_05-genotype_compilation.sh | bsub
+cat 07_05-genotype_compilation.sh | sbatch
 ```
 
