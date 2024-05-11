@@ -7,8 +7,8 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --mem=5GB
-#SBATCH --mail-type=ALL
-#SBATCH --mail-user=milton.pividori@cuanschutz.edu
+#DISABLED SBATCH --mail-type=ALL
+#DISABLED SBATCH --mail-user=milton.pividori@cuanschutz.edu
 
 # make sure we use the number of CPUs specified
 export n_jobs=1
