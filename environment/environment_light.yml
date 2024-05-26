@@ -5,6 +5,8 @@ channels:
 dependencies:
   - fastparquet=0.8.*
   - ipython
+  - jupyterlab=3.5.*
+  - jupytext=1.14.*
   - numpy=1.23.*
   - pandas=1.5.*
   - papermill=2.3.*
