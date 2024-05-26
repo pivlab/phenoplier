@@ -3,8 +3,14 @@
 This folder has the scripts to run the harmonization and imputation process across all GWAS on randomly generated phenotypes (`../05_gwas`).
 It uses a standard pipeline for this task: https://github.com/hakyimlab/summary-gwas-imputation 
 
+# Setup environment
 
-# Load Alpine-specific paths and PhenoPLIER configuration
+You either run jobs in the Alpine cluster or in a desktop computer.
+
+## Load Alpine-specific paths and PhenoPLIER configuration
+
+You need to run `acompile` to start a new interactive session before running the
+commands below.
 
 ```bash
 # load conda environment
@@ -17,12 +23,33 @@ mamba activate phenoplier_light
 # load in bash session all PhenoPLIER environmental variables
 eval `python ${PHENOPLIER_CODE_DIR}/libs/conf.py`
 
+# Set executor
+export PHENOPLIER_JOBS_EXECUTOR="sbatch"
+
 # make sure they were loaded correctly
-# should output something like /project/...
+# should output something like /pl/...
 echo $PHENOPLIER_ROOT_DIR
 ```
 
-In Alpine, run `acompile` to get a node before submitting jobs.
+## Desktop computer
+
+Set the executor to bash:
+```bash
+# load conda environment
+conda activate phenoplier_light
+
+# load PhenoPLIER config
+. scripts/env.sh
+
+# load in bash session all PhenoPLIER environmental variables
+eval `python ${PHENOPLIER_CODE_DIR}/libs/conf.py`
+
+# Set executor
+export PHENOPLIER_JOBS_EXECUTOR="bash"
+
+# make sure they were loaded correctly
+echo $PHENOPLIER_ROOT_DIR
+```
 
 
 # Download the necessary data
@@ -49,15 +76,43 @@ The `_tmp` folder stores logs and needs to be created.
 
 ## Harmonization
 ```bash
-for pheno_id in {0..999}; do
+cd nbs/15_gsa_gls/20-null_simulations/10_gwas_harmonization
+
+for pheno_id in {0..99}; do
   export pheno_id
   cat cluster_jobs/01_harmonization_job-template.sh | envsubst '${pheno_id}' | sbatch
 done
 ```
 
+New, cooler way (works in Alpine and desktop):
+
+```bash
+run_job () {
+  cluster_job_file="$1"
+  export pheno_id="$2"
+  
+  cat $cluster_job_file | envsubst '${pheno_id}' | ${PHENOPLIER_JOBS_EXECUTOR}
+}
+
+export -f run_job
+
+# (optional) export function definition so it's included in the Docker container
+export PHENOPLIER_BASH_FUNCTIONS_CODE="$(declare -f run_job)"
+
+# Run
+parallel -j15 run_job cluster_jobs/01_harmonization_job-template.sh {} ::: {0..99}
+```
+
 The `check_jobs.sh` script could be used also to quickly assess which jobs failed (given theirs logs):
 ```bash
-bash check_job.sh -i _tmp/harmonization/
+bash check_job.sh \
+  -i ${PHENOPLIER_RESULTS_GLS_NULL_SIMS}/harmonized_gwas \
+  -p "INFO - Finished converting GWAS"
+
+# UK Biobank-specific check
+bash check_job.sh \
+  -i ${PHENOPLIER_RESULTS_GLS_NULL_SIMS}/harmonized_gwas \
+  -p "INFO - 6746644 variants after ensuring uniqueness"
 ```
 
 There should be [NUMBER OF PHENOTYPES] files in the output directory: 1000 random phenotypes.

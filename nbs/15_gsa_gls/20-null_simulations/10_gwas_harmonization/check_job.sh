@@ -48,7 +48,7 @@ if [ -z "${INPUT_DIR}" ]; then
 fi
 
 if [ -z "${FILE_PATTERN}" ]; then
-    FILE_PATTERN="*.error"
+    FILE_PATTERN="*.log"
     echo "WARNING: File pattern (--file-pattern) not provided, using default: '${FILE_PATTERN}'"
 fi
 
