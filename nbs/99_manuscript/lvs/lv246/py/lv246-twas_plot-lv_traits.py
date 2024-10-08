@@ -614,6 +614,8 @@ _trait_renames = {
     # "Treatment/medication code: rosuvastatin": "Medication: rosuvastatin",
     "hypercholesterolemia": "High-cholesterol",
     "alzheimer's disease": "Alzheimer's disease",
+    "LDL Cholesterol NMR": "LDL Cholesterol",
+    "Triglycerides NMR": "Triglycerides",
 }
 
 # %%
@@ -621,8 +623,8 @@ plot_data = _tmp_heatmap_multixcan2.rename(columns=_trait_renames)
 
 # %%
 lipids_traits = [
-    "LDL Cholesterol NMR",
-    "Triglycerides NMR",
+    "LDL Cholesterol",
+    "Triglycerides",
     # "CH2DB NMR",
 ]
 
