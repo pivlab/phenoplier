@@ -741,21 +741,9 @@ _tmp = np.power(10, -_tmp)
 display(_tmp)
 
 # %%
-# most significant p-value:
-_tmp_pval = np.power(10, -_tmp.max())
-display(_tmp_pval)
-assert -np.log10(_tmp_pval) == _tmp.max()
-
-# %%
 _tmp = plot_data.loc["ACACA"].sort_values()
 _tmp = np.power(10, -_tmp)
 display(_tmp)
-
-# %%
-# most significant p-value:
-_tmp_pval = np.power(10, -_tmp.max())
-display(_tmp_pval)
-assert -np.log10(_tmp_pval) == _tmp.max()
 
 # %% [markdown]
 # # Show RCP for some genes
