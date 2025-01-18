@@ -214,7 +214,7 @@ MULTIPLIER["BANCHEREAU_MCPCOUNTER_NEUTROPHIL_FILE"] = Path(
 # PhenomeXcan
 #
 PHENOMEXCAN = {}
-PHENOMEXCAN["BASE_DIR"] = Path(DATA_DIR, "phenomexcan").resolve()
+PHENOMEXCAN["BASE_DIR"] = Path(DATA_DIR, "twas").resolve()
 
 # genes metadata and mappings
 PHENOMEXCAN["GENES_METADATA_DIR"] = Path(
@@ -273,13 +273,13 @@ PHENOMEXCAN["UNIFIED_PHENO_INFO_FILE"] = Path(
 # ld blocks
 PHENOMEXCAN["LD_BLOCKS"] = {}
 PHENOMEXCAN["LD_BLOCKS"]["BASE_DIR"] = Path(
-    PHENOMEXCAN["BASE_DIR"], "ld_blocks"
+    PHENOMEXCAN["BASE_DIR"], "predixcan"
 ).resolve()
 PHENOMEXCAN["LD_BLOCKS"]["1000G_GENOTYPE_DIR"] = Path(
     PHENOMEXCAN["LD_BLOCKS"]["BASE_DIR"], "reference_panel_1000G"
 ).resolve()
 PHENOMEXCAN["LD_BLOCKS"]["GTEX_V8_GENOTYPE_DIR"] = Path(
-    PHENOMEXCAN["LD_BLOCKS"]["BASE_DIR"], "reference_panel_gtex_v8"
+    PHENOMEXCAN["LD_BLOCKS"]["BASE_DIR"], "reference_panels/gtex_v8"
 ).resolve()
 
 # predictions models

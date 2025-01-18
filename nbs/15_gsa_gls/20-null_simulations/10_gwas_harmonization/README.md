@@ -14,7 +14,7 @@ commands below.
 
 ```bash
 # load conda environment
-module load mambaforge/23.1.0-1
+module load mambaforge/23.1.0-1 gnu_parallel/20210322
 mamba activate phenoplier_light
 
 # load PhenoPLIER config
@@ -33,7 +33,6 @@ echo $PHENOPLIER_ROOT_DIR
 
 ## Desktop computer
 
-Set the executor to bash:
 ```bash
 # load conda environment
 conda activate phenoplier_light
@@ -75,23 +74,14 @@ The `_tmp` folder stores logs and needs to be created.
 
 
 ## Harmonization
+
 ```bash
 cd nbs/15_gsa_gls/20-null_simulations/10_gwas_harmonization
 
-for pheno_id in {0..99}; do
-  export pheno_id
-  cat cluster_jobs/01_harmonization_job-template.sh | envsubst '${pheno_id}' | sbatch
-done
-```
-
-New, cooler way (works in Alpine and desktop):
-
-```bash
-run_job () {
-  cluster_job_file="$1"
-  export pheno_id="$2"
+run_job() {
+  export pheno_id="$1"
   
-  cat $cluster_job_file | envsubst '${pheno_id}' | ${PHENOPLIER_JOBS_EXECUTOR}
+  cat cluster_jobs/01_harmonization_job-template.sh | envsubst '${pheno_id}' | ${PHENOPLIER_JOBS_EXECUTOR}
 }
 
 export -f run_job
@@ -100,7 +90,7 @@ export -f run_job
 export PHENOPLIER_BASH_FUNCTIONS_CODE="$(declare -f run_job)"
 
 # Run
-parallel -j15 run_job cluster_jobs/01_harmonization_job-template.sh {} ::: {0..99}
+parallel -j10 run_job {} ::: {0..0}
 ```
 
 The `check_jobs.sh` script could be used also to quickly assess which jobs failed (given theirs logs):

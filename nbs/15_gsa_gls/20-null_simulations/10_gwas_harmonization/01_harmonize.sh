@@ -70,7 +70,7 @@ if [ ! -f ${PYTHON_EXECUTABLE} ]; then
     exit 1
 fi
 
-VARIANTS_METADATA_FILE="${PHENOPLIER_PHENOMEXCAN_LD_BLOCKS_GTEX_V8_GENOTYPE_DIR}/variant_metadata.txt.gz"
+VARIANTS_METADATA_FILE="${PHENOPLIER_PHENOMEXCAN_LD_BLOCKS_GTEX_V8_GENOTYPE_DIR}/variants_metadata.txt.gz"
 if [ ! -f ${VARIANTS_METADATA_FILE} ]; then
     >&2 echo "The variants metadata file does not exist: ${VARIANTS_METADATA_FILE}"
     exit 1

@@ -10,7 +10,7 @@
 
 # BASE_DIR is the parent directory where the code and manuscript repos are
 # located.
-BASE_DIR=/home/miltondp/projects/phenoplier/clean_orig_base/phenoplier
+BASE_DIR=/home/miltondp/projects/phenoplier/clean_orig_base/phenoplier-gwas-40pcs
 
 # Project name
 #PROJECT_NAME=phenoplier
@@ -27,13 +27,13 @@ echo "PHENOPLIER_ROOT_DIR=${PHENOPLIER_ROOT_DIR}"
 export PHENOPLIER_MANUSCRIPT_DIR=${BASE_DIR}/manuscript
 echo "PHENOPLIER_MANUSCRIPT_DIR=${PHENOPLIER_MANUSCRIPT_DIR}"
 
-export PHENOPLIER_CODE_DIR=/home/miltondp/projects/phenoplier/phenoplier-gls-nulls
+export PHENOPLIER_CODE_DIR=/home/miltondp/projects/phenoplier/phenoplier-gls-nulls-gwas40pcs
 echo "PHENOPLIER_CODE_DIR=${PHENOPLIER_CODE_DIR}"
 
 export PYTHONPATH=${PHENOPLIER_CODE_DIR}/libs/:${PYTHONPATH}
 echo "PYTHONPATH=${PYTHONPATH}"
 
 # GTEx v8
-export PHENOPLIER_GTEX_V8_DIR="/home/miltondp/projects/phenoplier/clean_orig_base/gtex_v8/"
+export PHENOPLIER_GTEX_V8_DIR=/home/miltondp/projects/phenoplier/clean_orig_base/gtex_v8
 echo "PHENOPLIER_GTEX_V8_DIR=${PHENOPLIER_GTEX_V8_DIR}"
 
