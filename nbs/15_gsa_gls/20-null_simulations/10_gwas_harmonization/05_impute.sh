@@ -117,5 +117,4 @@ ${PYTHON_EXECUTABLE} ${PHENOPLIER_GWAS_IMPUTATION_BASE_DIR}/src/gwas_summary_imp
     -sub_batches ${N_BATCHES} \
     -sub_batch ${BATCH_ID} \
     --standardise_dosages \
-    -output ${OUTPUT_DIR}/${OUTPUT_FILENAME_PREFIX}-chr${CHROMOSOME}-batch${BATCH_ID}_${N_BATCHES}.txt
-
+    -output ${OUTPUT_DIR}/${OUTPUT_FILENAME_PREFIX}-chr${CHROMOSOME}-batch${BATCH_ID}_${N_BATCHES}.txt 2>&1 | tee ${OUTPUT_DIR}/${OUTPUT_FILENAME_PREFIX}-chr${CHROMOSOME}-batch${BATCH_ID}_${N_BATCHES}.log
