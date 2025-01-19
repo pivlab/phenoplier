@@ -6,7 +6,7 @@
 #       extension: .R
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.13.8
+#       jupytext_version: 1.14.7
 #   kernelspec:
 #     display_name: R
 #     language: R
@@ -52,14 +52,20 @@ SMULTIXCAN_DIR
 # %% [markdown] tags=[]
 # # Random pheno 0
 
+# %%
+pheno_code <- "0"
+
 # %% [markdown] tags=[]
 # ## S-PrediXcan
+
+# %%
+tissue <- "Whole_Blood"
 
 # %% [markdown] tags=[]
 # ### Load data
 
 # %% tags=[]
-twas <- as.data.frame(read_csv(file.path(SPREDIXCAN_DIR, "random.pheno0-gtex_v8-mashr-Whole_Blood.csv")))
+twas <- as.data.frame(read_csv(file.path(SPREDIXCAN_DIR, paste0("random.pheno", pheno_code,"-gtex_v8-mashr-", tissue,".csv"))))
 
 # %% tags=[]
 dim(twas)
@@ -73,7 +79,10 @@ head(twas)
 # %% tags=[]
 options(repr.plot.width = 10, repr.plot.height = 10)
 
-qq(twas$pvalue, main = "Q-Q plot of TWAS p-values")
+qq(
+    twas$pvalue,
+    main = paste0("random pheno ", pheno_code, " - QQ plot of S-PrediXcan - ", tissue)
+)
 
 # %% [markdown] tags=[]
 # ## S-MultiXcan
@@ -82,7 +91,7 @@ qq(twas$pvalue, main = "Q-Q plot of TWAS p-values")
 # ### Load data
 
 # %% tags=[]
-twas <- as.data.frame(read_table(file.path(SMULTIXCAN_DIR, "random.pheno0-gtex_v8-mashr-smultixcan.txt")))
+twas <- as.data.frame(read_table(file.path(SMULTIXCAN_DIR, paste0("random.pheno", pheno_code, "-gtex_v8-mashr-smultixcan.txt"))))
 
 # %% tags=[]
 dim(twas)
@@ -96,55 +105,9 @@ head(twas)
 # %% tags=[]
 options(repr.plot.width = 10, repr.plot.height = 10)
 
-qq(twas$pvalue, main = "Q-Q plot of TWAS p-values")
-
-# %% [markdown] tags=[]
-# # Random pheno 28
-
-# %% [markdown] tags=[]
-# ## S-PrediXcan
-
-# %% [markdown] tags=[]
-# ### Load data
-
-# %% tags=[]
-twas <- as.data.frame(read_csv(file.path(SPREDIXCAN_DIR, "random.pheno28-gtex_v8-mashr-Whole_Blood.csv")))
-
-# %% tags=[]
-dim(twas)
-
-# %% tags=[]
-head(twas)
-
-# %% [markdown] tags=[]
-# ### QQ-plot
-
-# %% tags=[]
-options(repr.plot.width = 10, repr.plot.height = 10)
-
-qq(twas$pvalue, main = "Q-Q plot of TWAS p-values")
-
-# %% [markdown] tags=[]
-# ## S-MultiXcan
-
-# %% [markdown] tags=[]
-# ### Load data
-
-# %% tags=[]
-twas <- as.data.frame(read_table(file.path(SMULTIXCAN_DIR, "random.pheno28-gtex_v8-mashr-smultixcan.txt")))
-
-# %% tags=[]
-dim(twas)
-
-# %% tags=[]
-head(twas)
-
-# %% [markdown] tags=[]
-# ### QQ-plot
-
-# %% tags=[]
-options(repr.plot.width = 10, repr.plot.height = 10)
-
-qq(twas$pvalue, main = "Q-Q plot of TWAS p-values")
+qq(
+    twas$pvalue,
+    main = paste0("random pheno ", pheno_code, " - QQ plot of S-MultiXcan")
+)
 
 # %% tags=[]
