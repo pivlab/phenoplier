@@ -190,6 +190,10 @@ qq(
 # %% [markdown] tags=[]
 # # Random pheno 0 (pvalue)
 
+# %% [markdown] tags=[]
+# This is a check with the previous run of the harmonization script that included the pvalue column.
+# The one at the top, labeld "beta/se", includes only those two columns, as suggested by the harmonization script (after finding GWAS pvalues with zeros).
+
 # %%
 pheno_code <- "0"
 
@@ -324,4 +328,552 @@ qq(
     main = paste0("random pheno ", pheno_code, " (", title_prefix, ")", " - QQ plot of GWAS p-values")
 )
 
+# %% [markdown] tags=[]
+# # Random pheno 1
+
+# %%
+pheno_code <- "1"
+
+# %% [markdown] tags=[]
+# ## Load data
+
 # %% tags=[]
+gwas <- as.data.frame(read_table(file.path(GWAS_DIR, paste0("random.pheno", pheno_code,".glm.linear.tsv-harmonized.txt"))))
+
+# %% tags=[]
+dim(gwas)
+
+# %% tags=[]
+head(gwas)
+
+# %% [markdown] tags=[]
+# ### Extract chromosome
+
+# %% tags=[]
+unique(gwas$chromosome)
+
+# %% tags=[]
+gwas$chrom <- gsub("chr([0-9]+)", "\\1", gwas$chromosome)
+gwas <- transform(gwas, chrom = as.numeric(chrom))
+
+# %% tags=[]
+unique(gwas$chrom)
+
+# %% [markdown] tags=[]
+# ## Data stats
+
+# %%
+gwas_p_stats <- gwas %>%
+  summarise(
+    mean_value = mean(pvalue, na.rm = TRUE),
+    sd_value   = sd(pvalue, na.rm = TRUE),
+    min_value  = min(pvalue, na.rm = TRUE),
+    max_value  = max(pvalue, na.rm = TRUE),
+  )
+
+# %%
+gwas_p_stats
+
+# %%
+gwas_mlog_stats <- gwas %>%
+  mutate(LOGP = -log10(pvalue)) %>%
+  summarise(
+    mean_neg_log10 = mean(LOGP, na.rm = TRUE),
+    sd_neg_log10   = sd(LOGP, na.rm = TRUE),
+    min_neg_log10  = min(LOGP, na.rm = TRUE),
+    max_neg_log10  = max(LOGP, na.rm = TRUE)
+  )
+
+# %%
+gwas_mlog_stats
+
+# %%
+gwas_max_mlog_noninf <- gwas %>%
+  mutate(LOGP = -log10(pvalue)) %>%
+  summarise(
+    max_no_inf = max(LOGP[is.finite(LOGP)], na.rm = TRUE)
+  ) %>%
+  pull(max_no_inf)
+
+# %%
+gwas_max_mlog_noninf
+
+# %%
+gwas_zs_stats <- gwas %>%
+  summarise(
+    mean_value = mean(zscore, na.rm = TRUE),
+    sd_value   = sd(zscore, na.rm = TRUE),
+    min_value  = min(zscore, na.rm = TRUE),
+    max_value  = max(zscore, na.rm = TRUE),
+  )
+
+# %%
+gwas_zs_stats
+
+# %%
+gwas_beta_stats <- gwas %>%
+  summarise(
+    mean_value = mean(effect_size, na.rm = TRUE),
+    sd_value   = sd(effect_size, na.rm = TRUE),
+    min_value  = min(effect_size, na.rm = TRUE),
+    max_value  = max(effect_size, na.rm = TRUE),
+  )
+
+# %%
+gwas_beta_stats
+
+# %%
+gwas_se_stats <- gwas %>%
+  summarise(
+    mean_value = mean(standard_error, na.rm = TRUE),
+    sd_value   = sd(standard_error, na.rm = TRUE),
+    min_value  = min(standard_error, na.rm = TRUE),
+    max_value  = max(standard_error, na.rm = TRUE),
+  )
+
+# %%
+gwas_se_stats
+
+# %% [markdown] tags=[]
+# ## Manhattan plot
+
+# %% tags=[]
+options(repr.plot.width = 20, repr.plot.height = 10)
+
+manhattan(
+  gwas,
+  chr = "chrom",
+  bp = "position",
+  p = "pvalue",
+  snp = "variant_id",
+  main = paste0("random pheno ", pheno_code, " (", title_prefix, ")", " - Manhattan plot"),
+  suggestiveline = F,
+  genomewideline = -log10(5e-08),
+  cex = 0.6,
+  cex.axis = 0.9,
+  ylim = c(0, max(gwas_max_mlog_noninf+1, 10)),
+)
+
+# %% [markdown] tags=[]
+# ## QQ-plot
+
+# %% tags=[]
+options(repr.plot.width = 10, repr.plot.height = 10)
+
+qq(
+    gwas$pvalue,
+    main = paste0("random pheno ", pheno_code, " (", title_prefix, ")", " - QQ plot of GWAS p-values")
+)
+
+# %% [markdown] tags=[]
+# # Random pheno 2
+
+# %%
+pheno_code <- "2"
+
+# %% [markdown] tags=[]
+# ## Load data
+
+# %% tags=[]
+gwas <- as.data.frame(read_table(file.path(GWAS_DIR, paste0("random.pheno", pheno_code,".glm.linear.tsv-harmonized.txt"))))
+
+# %% tags=[]
+dim(gwas)
+
+# %% tags=[]
+head(gwas)
+
+# %% [markdown] tags=[]
+# ### Extract chromosome
+
+# %% tags=[]
+unique(gwas$chromosome)
+
+# %% tags=[]
+gwas$chrom <- gsub("chr([0-9]+)", "\\1", gwas$chromosome)
+gwas <- transform(gwas, chrom = as.numeric(chrom))
+
+# %% tags=[]
+unique(gwas$chrom)
+
+# %% [markdown] tags=[]
+# ## Data stats
+
+# %%
+gwas_p_stats <- gwas %>%
+  summarise(
+    mean_value = mean(pvalue, na.rm = TRUE),
+    sd_value   = sd(pvalue, na.rm = TRUE),
+    min_value  = min(pvalue, na.rm = TRUE),
+    max_value  = max(pvalue, na.rm = TRUE),
+  )
+
+# %%
+gwas_p_stats
+
+# %%
+gwas_mlog_stats <- gwas %>%
+  mutate(LOGP = -log10(pvalue)) %>%
+  summarise(
+    mean_neg_log10 = mean(LOGP, na.rm = TRUE),
+    sd_neg_log10   = sd(LOGP, na.rm = TRUE),
+    min_neg_log10  = min(LOGP, na.rm = TRUE),
+    max_neg_log10  = max(LOGP, na.rm = TRUE)
+  )
+
+# %%
+gwas_mlog_stats
+
+# %%
+gwas_max_mlog_noninf <- gwas %>%
+  mutate(LOGP = -log10(pvalue)) %>%
+  summarise(
+    max_no_inf = max(LOGP[is.finite(LOGP)], na.rm = TRUE)
+  ) %>%
+  pull(max_no_inf)
+
+# %%
+gwas_max_mlog_noninf
+
+# %%
+gwas_zs_stats <- gwas %>%
+  summarise(
+    mean_value = mean(zscore, na.rm = TRUE),
+    sd_value   = sd(zscore, na.rm = TRUE),
+    min_value  = min(zscore, na.rm = TRUE),
+    max_value  = max(zscore, na.rm = TRUE),
+  )
+
+# %%
+gwas_zs_stats
+
+# %%
+gwas_beta_stats <- gwas %>%
+  summarise(
+    mean_value = mean(effect_size, na.rm = TRUE),
+    sd_value   = sd(effect_size, na.rm = TRUE),
+    min_value  = min(effect_size, na.rm = TRUE),
+    max_value  = max(effect_size, na.rm = TRUE),
+  )
+
+# %%
+gwas_beta_stats
+
+# %%
+gwas_se_stats <- gwas %>%
+  summarise(
+    mean_value = mean(standard_error, na.rm = TRUE),
+    sd_value   = sd(standard_error, na.rm = TRUE),
+    min_value  = min(standard_error, na.rm = TRUE),
+    max_value  = max(standard_error, na.rm = TRUE),
+  )
+
+# %%
+gwas_se_stats
+
+# %% [markdown] tags=[]
+# ## Manhattan plot
+
+# %% tags=[]
+options(repr.plot.width = 20, repr.plot.height = 10)
+
+manhattan(
+  gwas,
+  chr = "chrom",
+  bp = "position",
+  p = "pvalue",
+  snp = "variant_id",
+  main = paste0("random pheno ", pheno_code, " (", title_prefix, ")", " - Manhattan plot"),
+  suggestiveline = F,
+  genomewideline = -log10(5e-08),
+  cex = 0.6,
+  cex.axis = 0.9,
+  ylim = c(0, max(gwas_max_mlog_noninf+1, 10)),
+)
+
+# %% [markdown] tags=[]
+# ## QQ-plot
+
+# %% tags=[]
+options(repr.plot.width = 10, repr.plot.height = 10)
+
+qq(
+    gwas$pvalue,
+    main = paste0("random pheno ", pheno_code, " (", title_prefix, ")", " - QQ plot of GWAS p-values")
+)
+
+# %% [markdown] tags=[]
+# # Random pheno 3
+
+# %%
+pheno_code <- "3"
+
+# %% [markdown] tags=[]
+# ## Load data
+
+# %% tags=[]
+gwas <- as.data.frame(read_table(file.path(GWAS_DIR, paste0("random.pheno", pheno_code,".glm.linear.tsv-harmonized.txt"))))
+
+# %% tags=[]
+dim(gwas)
+
+# %% tags=[]
+head(gwas)
+
+# %% [markdown] tags=[]
+# ### Extract chromosome
+
+# %% tags=[]
+unique(gwas$chromosome)
+
+# %% tags=[]
+gwas$chrom <- gsub("chr([0-9]+)", "\\1", gwas$chromosome)
+gwas <- transform(gwas, chrom = as.numeric(chrom))
+
+# %% tags=[]
+unique(gwas$chrom)
+
+# %% [markdown] tags=[]
+# ## Data stats
+
+# %%
+gwas_p_stats <- gwas %>%
+  summarise(
+    mean_value = mean(pvalue, na.rm = TRUE),
+    sd_value   = sd(pvalue, na.rm = TRUE),
+    min_value  = min(pvalue, na.rm = TRUE),
+    max_value  = max(pvalue, na.rm = TRUE),
+  )
+
+# %%
+gwas_p_stats
+
+# %%
+gwas_mlog_stats <- gwas %>%
+  mutate(LOGP = -log10(pvalue)) %>%
+  summarise(
+    mean_neg_log10 = mean(LOGP, na.rm = TRUE),
+    sd_neg_log10   = sd(LOGP, na.rm = TRUE),
+    min_neg_log10  = min(LOGP, na.rm = TRUE),
+    max_neg_log10  = max(LOGP, na.rm = TRUE)
+  )
+
+# %%
+gwas_mlog_stats
+
+# %%
+gwas_max_mlog_noninf <- gwas %>%
+  mutate(LOGP = -log10(pvalue)) %>%
+  summarise(
+    max_no_inf = max(LOGP[is.finite(LOGP)], na.rm = TRUE)
+  ) %>%
+  pull(max_no_inf)
+
+# %%
+gwas_max_mlog_noninf
+
+# %%
+gwas_zs_stats <- gwas %>%
+  summarise(
+    mean_value = mean(zscore, na.rm = TRUE),
+    sd_value   = sd(zscore, na.rm = TRUE),
+    min_value  = min(zscore, na.rm = TRUE),
+    max_value  = max(zscore, na.rm = TRUE),
+  )
+
+# %%
+gwas_zs_stats
+
+# %%
+gwas_beta_stats <- gwas %>%
+  summarise(
+    mean_value = mean(effect_size, na.rm = TRUE),
+    sd_value   = sd(effect_size, na.rm = TRUE),
+    min_value  = min(effect_size, na.rm = TRUE),
+    max_value  = max(effect_size, na.rm = TRUE),
+  )
+
+# %%
+gwas_beta_stats
+
+# %%
+gwas_se_stats <- gwas %>%
+  summarise(
+    mean_value = mean(standard_error, na.rm = TRUE),
+    sd_value   = sd(standard_error, na.rm = TRUE),
+    min_value  = min(standard_error, na.rm = TRUE),
+    max_value  = max(standard_error, na.rm = TRUE),
+  )
+
+# %%
+gwas_se_stats
+
+# %% [markdown] tags=[]
+# ## Manhattan plot
+
+# %% tags=[]
+options(repr.plot.width = 20, repr.plot.height = 10)
+
+manhattan(
+  gwas,
+  chr = "chrom",
+  bp = "position",
+  p = "pvalue",
+  snp = "variant_id",
+  main = paste0("random pheno ", pheno_code, " (", title_prefix, ")", " - Manhattan plot"),
+  suggestiveline = F,
+  genomewideline = -log10(5e-08),
+  cex = 0.6,
+  cex.axis = 0.9,
+  ylim = c(0, max(gwas_max_mlog_noninf+1, 10)),
+)
+
+# %% [markdown] tags=[]
+# ## QQ-plot
+
+# %% tags=[]
+options(repr.plot.width = 10, repr.plot.height = 10)
+
+qq(
+    gwas$pvalue,
+    main = paste0("random pheno ", pheno_code, " (", title_prefix, ")", " - QQ plot of GWAS p-values")
+)
+
+# %% [markdown] tags=[]
+# # Random pheno 4
+
+# %%
+pheno_code <- "4"
+
+# %% [markdown] tags=[]
+# ## Load data
+
+# %% tags=[]
+gwas <- as.data.frame(read_table(file.path(GWAS_DIR, paste0("random.pheno", pheno_code,".glm.linear.tsv-harmonized.txt"))))
+
+# %% tags=[]
+dim(gwas)
+
+# %% tags=[]
+head(gwas)
+
+# %% [markdown] tags=[]
+# ### Extract chromosome
+
+# %% tags=[]
+unique(gwas$chromosome)
+
+# %% tags=[]
+gwas$chrom <- gsub("chr([0-9]+)", "\\1", gwas$chromosome)
+gwas <- transform(gwas, chrom = as.numeric(chrom))
+
+# %% tags=[]
+unique(gwas$chrom)
+
+# %% [markdown] tags=[]
+# ## Data stats
+
+# %%
+gwas_p_stats <- gwas %>%
+  summarise(
+    mean_value = mean(pvalue, na.rm = TRUE),
+    sd_value   = sd(pvalue, na.rm = TRUE),
+    min_value  = min(pvalue, na.rm = TRUE),
+    max_value  = max(pvalue, na.rm = TRUE),
+  )
+
+# %%
+gwas_p_stats
+
+# %%
+gwas_mlog_stats <- gwas %>%
+  mutate(LOGP = -log10(pvalue)) %>%
+  summarise(
+    mean_neg_log10 = mean(LOGP, na.rm = TRUE),
+    sd_neg_log10   = sd(LOGP, na.rm = TRUE),
+    min_neg_log10  = min(LOGP, na.rm = TRUE),
+    max_neg_log10  = max(LOGP, na.rm = TRUE)
+  )
+
+# %%
+gwas_mlog_stats
+
+# %%
+gwas_max_mlog_noninf <- gwas %>%
+  mutate(LOGP = -log10(pvalue)) %>%
+  summarise(
+    max_no_inf = max(LOGP[is.finite(LOGP)], na.rm = TRUE)
+  ) %>%
+  pull(max_no_inf)
+
+# %%
+gwas_max_mlog_noninf
+
+# %%
+gwas_zs_stats <- gwas %>%
+  summarise(
+    mean_value = mean(zscore, na.rm = TRUE),
+    sd_value   = sd(zscore, na.rm = TRUE),
+    min_value  = min(zscore, na.rm = TRUE),
+    max_value  = max(zscore, na.rm = TRUE),
+  )
+
+# %%
+gwas_zs_stats
+
+# %%
+gwas_beta_stats <- gwas %>%
+  summarise(
+    mean_value = mean(effect_size, na.rm = TRUE),
+    sd_value   = sd(effect_size, na.rm = TRUE),
+    min_value  = min(effect_size, na.rm = TRUE),
+    max_value  = max(effect_size, na.rm = TRUE),
+  )
+
+# %%
+gwas_beta_stats
+
+# %%
+gwas_se_stats <- gwas %>%
+  summarise(
+    mean_value = mean(standard_error, na.rm = TRUE),
+    sd_value   = sd(standard_error, na.rm = TRUE),
+    min_value  = min(standard_error, na.rm = TRUE),
+    max_value  = max(standard_error, na.rm = TRUE),
+  )
+
+# %%
+gwas_se_stats
+
+# %% [markdown] tags=[]
+# ## Manhattan plot
+
+# %% tags=[]
+options(repr.plot.width = 20, repr.plot.height = 10)
+
+manhattan(
+  gwas,
+  chr = "chrom",
+  bp = "position",
+  p = "pvalue",
+  snp = "variant_id",
+  main = paste0("random pheno ", pheno_code, " (", title_prefix, ")", " - Manhattan plot"),
+  suggestiveline = F,
+  genomewideline = -log10(5e-08),
+  cex = 0.6,
+  cex.axis = 0.9,
+  ylim = c(0, max(gwas_max_mlog_noninf+1, 10)),
+)
+
+# %% [markdown] tags=[]
+# ## QQ-plot
+
+# %% tags=[]
+options(repr.plot.width = 10, repr.plot.height = 10)
+
+qq(
+    gwas$pvalue,
+    main = paste0("random pheno ", pheno_code, " (", title_prefix, ")", " - QQ plot of GWAS p-values")
+)
+
+# %%
