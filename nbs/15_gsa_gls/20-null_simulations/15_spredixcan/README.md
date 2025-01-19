@@ -106,39 +106,41 @@ If any job failed, check `../10_gwas_harmonization/README.md`, which has python 
 ## S-MultiXcan
 
 ```bash
-mkdir -p _tmp/smultixcan
+cd nbs/15_gsa_gls/20-null_simulations/15_spredixcan
 
-for pheno_id in {0..999}; do
-  export pheno_id
-  cat cluster_jobs/05_smultixcan_job-template.sh | envsubst '${pheno_id}' | sbatch
-done
+run_job() {
+  export pheno_id=$1
+  
+  cat cluster_jobs/05_smultixcan_job-template.sh | envsubst '${pheno_id}' | ${PHENOPLIER_JOBS_EXECUTOR}
+}
+
+export -f run_job
+
+# (optional) export function definition so it's included in the Docker container
+export PHENOPLIER_BASH_FUNCTIONS_CODE="$(declare -f run_job)"
+
+# Run
+parallel -j10 run_job {} ::: {0..99}
 ```
 
-The `check_jobs.sh` script could be used also to quickly assess which jobs failed (given theirs logs):
+Checks:
+
 ```bash
 bash check_job.sh \
   -i ${PHENOPLIER_RESULTS_GLS_NULL_SIMS}/twas/smultixcan \
   -p "INFO - Ran multi tissue"
-```
 
-Another check is to count how many S-PrediXcan files were processed for each random phenotype.
-It should be one per tissue (49):
-```bash
-# S-PrediXcan files
+# Check S-PrediXcan files
 bash check_job.sh \
   -i ${PHENOPLIER_RESULTS_GLS_NULL_SIMS}/twas/smultixcan \
   -p "Level 9 - Loading metaxcan " \
   -c 49
 
-# Tissues loaded
+# Check tissues loaded
 bash check_job.sh \
   -i ${PHENOPLIER_RESULTS_GLS_NULL_SIMS}/twas/smultixcan \
   -p "Level 9 - Processing " \
   -c 49
-
-# which should output:
-# Finished checking [NUMBER_OF_PHENOTYPES] logs:
-#  All jobs finished successfully
 ```
 
 
