@@ -253,80 +253,39 @@ However, this is not the case, and for this null simulation, we need all GWAS to
 
 So what we do is to read all final GWAS files, generate a set of common variants across all of them, and then align all final GWAS to that.
 
-
-```python
-import pickle
-from pathlib import Path
-import concurrent
-
-import numpy as np
-import pandas as pd
-
-import conf
-
-N_SAMPLES = 50
-
-POST_IMPUTED_DIR = Path(
-  conf.RESULTS["GLS_NULL_SIMS"],
-  "post_imputed_gwas"
-).resolve()
-assert POST_IMPUTED_DIR.exists(), POST_IMPUTED_DIR
-
-input_files = sorted(list(POST_IMPUTED_DIR.glob("*.txt.gz")))
-len(input_files)
-
-# sample files
-np.random.seed(0)
-input_files = np.random.choice(input_files, size=N_SAMPLES, replace=False)
-len(input_files)
-
-# read all GWAS and find a set of common panel_variant_id_values
-def _get_gwas_variants(f):
-    gwas_data = pd.read_table(f, usecols=["panel_variant_id", "zscore"])
-    assert gwas_data["panel_variant_id"].is_unique
-    assert gwas_data.shape == gwas_data.dropna().shape
-    return f.name, set(gwas_data["panel_variant_id"])
-
-common_variants = set()
-last_n_var_ids = -1
-with concurrent.futures.ProcessPoolExecutor(max_workers=conf.GENERAL["N_JOBS"]) as executor:
-    for gwas_file_name, gwas_variants in executor.map(_get_gwas_variants, input_files, chunksize=10):
-        if len(common_variants) == 0:
-            common_variants = gwas_variants
-        else:
-            common_variants = common_variants.intersection(gwas_variants)
-        
-        n_var_ids = len(common_variants)
-        same_previous = n_var_ids == last_n_var_ids
-        last_n_var_ids = n_var_ids
-        print(f"{gwas_file_name}, # common variants: {n_var_ids} (same? {same_previous})", flush=True)
-
-
-with open(POST_IMPUTED_DIR / "common_variant_ids.pkl", 'wb') as f:
-    pickle.dump(common_variants, f, protocol=pickle.HIGHEST_PROTOCOL)
+```bash
+python 14_compute_common_variant_ids.py \
+  --input-gwas-dir ${PHENOPLIER_RESULTS_GLS_NULL_SIMS}/post_imputed_gwas \
+  --input-gwas-file-pattern '*.txt.gz' \
+  --n-samples 50 \
+  --n-jobs ${PHENOPLIER_GENERAL_N_JOBS}
 ```
 
 ## Save GWAS files using common variants
 
 ```bash
-mkdir -p _tmp/common_var_ids
+cd nbs/15_gsa_gls/20-null_simulations/10_gwas_harmonization
 
-for pheno_id in {0..999}; do
-  export pheno_id
-  cat cluster_jobs/15-common_variant_ids_job-template.sh | envsubst '${pheno_id}' | sbatch
-done
+run_job() {
+  export pheno_id=$1
+  
+  cat cluster_jobs/15-common_variant_ids_job-template.sh | envsubst '${pheno_id}' | ${PHENOPLIER_JOBS_EXECUTOR}
+}
+
+export -f run_job
+
+# (optional) export function definition so it's included in the Docker container
+export PHENOPLIER_BASH_FUNCTIONS_CODE="$(declare -f run_job)"
+
+# Run
+parallel -j10 run_job {} ::: {0..99}
 ```
 
 Checks:
 ```bash
 bash check_job.sh \
-  -i _tmp/common_var_ids/ \
-  -f '*.out' \
-  -p "Filtering variants: 8325729"
-
-# which should output:
-# Finished checking [NUMBER_OF_PHENOTYPES] logs:
-#  All jobs finished successfully
+  -i ${PHENOPLIER_RESULTS_GLS_NULL_SIMS}/final_imputed_gwas \
+  -p "Saving output file: "
 ```
 
 
@@ -343,8 +302,4 @@ Logs for `random_pheno0` are in `random_pheno1.*` (indexes are different because
 
 # Manhattan and QQ plots
 
-Notebook `15-gwas-qqplot.ipynb` checks that the distribution of pvalues is as expected.
-
-
-
-REMEMBER TO RUN QQPLOTS NOTEBOOKS WHEN ALL IS DONE
+Notebooks `*-qqplot.ipynb` checks that the distribution of pvalues is as expected.
