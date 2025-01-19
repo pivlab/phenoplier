@@ -40,7 +40,7 @@ GLS_NULL_SIMS_DIR
 # %% tags=[]
 GWAS_DIR <- file.path(
     GLS_NULL_SIMS_DIR,
-    "_pvalue",
+    # "_pvalue",
     "harmonized_gwas"
 )
 
