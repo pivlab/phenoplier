@@ -7,8 +7,8 @@ POSITIONAL_ARGS=()
 
 while [[ $# -gt 0 ]]; do
   case $1 in
-    -d|--gwas-dir)
-      INPUT_GWAS_DIR="$2"
+    -i|--input-gwas-file)
+      INPUT_GWAS_FILE="$2"
       shift # past argument
       shift # past value
       ;;
@@ -44,8 +44,8 @@ set -- "${POSITIONAL_ARGS[@]}" # restore positional parameters
 #
 # check arguments
 #
-if [ -z "${INPUT_GWAS_DIR}" ]; then
-    >&2 echo "Error, --gwas-dir <value> not provided"
+if [ -z "${INPUT_GWAS_FILE}" ]; then
+    >&2 echo "Error, --input-gwas-file <value> not provided"
     exit 1
 fi
 
@@ -81,23 +81,30 @@ if [ ! -f ${PYTHON_EXECUTABLE} ]; then
     exit 1
 fi
 
+# make sure the the input gwas file is for the phenotype name given
+INPUT_GWAS_FILENAME=$(basename ${INPUT_GWAS_FILE})
+if [[ ! "${INPUT_GWAS_FILENAME}" == *"${PHENOTYPE_NAME}"* ]]; then
+  >&2 echo "Phenotype name given (${PHENOTYPE_NAME}) is not present in input GWAS file name (${INPUT_GWAS_FILENAME})."
+  exit 1
+fi
+
 # Create output directory
 mkdir -p ${OUTPUT_DIR}
 OUTPUT_FILENAME_BASE="${PHENOTYPE_NAME}-gtex_v8-mashr-${TISSUE}"
 
-# FIXME: in the future:
-#  * use parameter --gwas-file instead of --gwas_folder and --gwas_file_pattern
-#  * add --throw (it's suggested in the documentation, but does not seem necessary)
 ${PYTHON_EXECUTABLE} ${PHENOPLIER_METAXCAN_BASE_DIR}/software/SPrediXcan.py \
     --model_db_path ${PHENOPLIER_PHENOMEXCAN_PREDICTION_MODELS_MASHR}/${PHENOPLIER_PHENOMEXCAN_PREDICTION_MODELS_MASHR_PREFIX}${TISSUE}.db \
     --covariance ${PHENOPLIER_PHENOMEXCAN_PREDICTION_MODELS_MASHR}/${PHENOPLIER_PHENOMEXCAN_PREDICTION_MODELS_MASHR_PREFIX}${TISSUE}.txt.gz \
-    --gwas_folder ${INPUT_GWAS_DIR} \
-    --gwas_file_pattern "${PHENOTYPE_NAME}.glm.*.txt.gz" \
+    --gwas_file ${INPUT_GWAS_FILE} \
     --separator $'\t' \
     --non_effect_allele_column "non_effect_allele" \
     --effect_allele_column "effect_allele" \
     --snp_column  "panel_variant_id" \
     --zscore_column "zscore" \
     --keep_non_rsid --additional_output --model_db_snp_key varID \
-    --output_file ${OUTPUT_DIR}/${OUTPUT_FILENAME_BASE}.csv >> ${OUTPUT_DIR}/${OUTPUT_FILENAME_BASE}.log 2>&1
+    --throw \
+    --output_file ${OUTPUT_DIR}/${OUTPUT_FILENAME_BASE}.csv 2>&1 | tee ${OUTPUT_DIR}/${OUTPUT_FILENAME_BASE}.log
 
+# old parameters
+#    --gwas_folder ${INPUT_GWAS_DIR} \
+#    --gwas_file_pattern "${PHENOTYPE_NAME}.glm.*.txt.gz" \

@@ -23,8 +23,10 @@ CODE_DIR=${PHENOPLIER_CODE_DIR}/nbs/15_gsa_gls/20-null_simulations/15_spredixcan
 FINAL_IMPUTED_GWAS_DIR="${PHENOPLIER_RESULTS_GLS_NULL_SIMS}/final_imputed_gwas"
 OUTPUT_DIR="${PHENOPLIER_RESULTS_GLS_NULL_SIMS}/twas/spredixcan"
 
+GWAS_JOBINDEX=${pheno_id}
+
 bash ${CODE_DIR}/01_spredixcan.sh \
-  --gwas-dir ${FINAL_IMPUTED_GWAS_DIR} \
+  --input-gwas-file ${FINAL_IMPUTED_GWAS_DIR}/random.pheno${GWAS_JOBINDEX}.glm-imputed.txt.gz\
   --phenotype-name "random.pheno${pheno_id}" \
   --tissue "${tissue}" \
   --output-dir ${OUTPUT_DIR}

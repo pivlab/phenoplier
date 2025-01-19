@@ -285,7 +285,7 @@ PHENOMEXCAN["LD_BLOCKS"]["GTEX_V8_GENOTYPE_DIR"] = Path(
 # predictions models
 PHENOMEXCAN["PREDICTION_MODELS"] = {}
 PHENOMEXCAN["PREDICTION_MODELS"]["BASE_DIR"] = Path(
-    PHENOMEXCAN["BASE_DIR"], "prediction_models"
+    PHENOMEXCAN["BASE_DIR"], "predixcan", "models"
 ).resolve()
 ## mashr models
 PHENOMEXCAN["PREDICTION_MODELS"]["MASHR"] = Path(
