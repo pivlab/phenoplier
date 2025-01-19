@@ -43,14 +43,20 @@ GWAS_DIR <- file.path(GLS_NULL_SIMS_DIR, "gwas")
 # %% tags=[]
 GWAS_DIR
 
+# %%
+title_prefix = "original"
+
 # %% [markdown] tags=[]
 # # Random pheno 0
 
+# %%
+pheno_code <- "0"
+
 # %% [markdown] tags=[]
 # ## Load data
 
 # %% tags=[]
-gwas <- as.data.frame(read_table(file.path(GWAS_DIR, "random.pheno0.glm.linear.tsv.gz")))
+gwas <- as.data.frame(read_table(file.path(GWAS_DIR, paste0("random.pheno", pheno_code,".glm.linear.tsv.gz"))))
 
 # %% tags=[]
 dim(gwas)
@@ -64,103 +70,68 @@ gwas <- gwas %>% filter(P >= 0 & P <= 1)
 # %%
 dim(gwas)
 
-# %% [markdown]
-# ## Manhattan plot
-
-# %%
-options(repr.plot.width = 20, repr.plot.height = 10)
-
-manhattan(
-  gwas,
-  chr = "#CHROM",
-  bp = "POS",
-  p = "P",
-  snp = "ID",
-  main = "Manhattan plot",
-  suggestiveline = F,
-  genomewideline = -log10(5e-08),
-  cex = 0.6,
-  cex.axis = 0.9,
-  ylim = c(0, 10),
-)
-
-# %% [markdown]
-# ## QQ-plot
-
-# %%
-options(repr.plot.width = 10, repr.plot.height = 10)
-
-qq(gwas$P, main = "Q-Q plot of GWAS p-values")
-
 # %% [markdown] tags=[]
-# # Random pheno 1
-
-# %% [markdown] tags=[]
-# ## Load data
-
-# %% tags=[]
-gwas <- as.data.frame(read_table(file.path(GWAS_DIR, "random.pheno1.glm.linear.tsv.gz")))
-
-# %% tags=[]
-dim(gwas)
-
-# %% tags=[]
-head(gwas)
+# ## Data stats
 
 # %%
-gwas <- gwas %>% filter(P >= 0 & P <= 1)
+gwas_p_stats <- gwas %>%
+  summarise(
+    mean_value = mean(P, na.rm = TRUE),
+    sd_value   = sd(P, na.rm = TRUE),
+    min_value  = min(P, na.rm = TRUE),
+    max_value  = max(P, na.rm = TRUE),
+  )
 
 # %%
-dim(gwas)
-
-# %% [markdown]
-# ## Manhattan plot
+gwas_p_stats
 
 # %%
-options(repr.plot.width = 20, repr.plot.height = 10)
-
-manhattan(
-  gwas,
-  chr = "#CHROM",
-  bp = "POS",
-  p = "P",
-  snp = "ID",
-  main = "Manhattan plot",
-  suggestiveline = F,
-  genomewideline = -log10(5e-08),
-  cex = 0.6,
-  cex.axis = 0.9,
-  ylim = c(0, 10),
-)
-
-# %% [markdown]
-# ## QQ-plot
+gwas_mlog_stats <- gwas %>%
+  mutate(LOGP = -log10(P)) %>%
+  summarise(
+    mean_neg_log10 = mean(LOGP, na.rm = TRUE),
+    sd_neg_log10   = sd(LOGP, na.rm = TRUE),
+    min_neg_log10  = min(LOGP, na.rm = TRUE),
+    max_neg_log10  = max(LOGP, na.rm = TRUE)
+  )
 
 # %%
-options(repr.plot.width = 10, repr.plot.height = 10)
-
-qq(gwas$P, main = "Q-Q plot of GWAS p-values")
-
-# %% [markdown] tags=[]
-# # Random pheno 2
-
-# %% [markdown] tags=[]
-# ## Load data
-
-# %% tags=[]
-gwas <- as.data.frame(read_table(file.path(GWAS_DIR, "random.pheno2.glm.linear.tsv.gz")))
-
-# %% tags=[]
-dim(gwas)
-
-# %% tags=[]
-head(gwas)
+gwas_mlog_stats
 
 # %%
-gwas <- gwas %>% filter(P >= 0 & P <= 1)
+gwas_max_mlog_noninf <- gwas %>%
+  mutate(LOGP = -log10(P)) %>%
+  summarise(
+    max_no_inf = max(LOGP[is.finite(LOGP)], na.rm = TRUE)
+  ) %>%
+  pull(max_no_inf)
 
 # %%
-dim(gwas)
+gwas_max_mlog_noninf
+
+# %%
+gwas_beta_stats <- gwas %>%
+  summarise(
+    mean_value = mean(BETA, na.rm = TRUE),
+    sd_value   = sd(BETA, na.rm = TRUE),
+    min_value  = min(BETA, na.rm = TRUE),
+    max_value  = max(BETA, na.rm = TRUE),
+  )
+
+# %%
+gwas_beta_stats
+
+# %%
+gwas_se_stats <- gwas %>%
+  summarise(
+    mean_value = mean(SE, na.rm = TRUE),
+    sd_value   = sd(SE, na.rm = TRUE),
+    min_value  = min(SE, na.rm = TRUE),
+    max_value  = max(SE, na.rm = TRUE),
+  )
+
+# %%
+gwas_se_stats
 
 # %% [markdown]
 # ## Manhattan plot
@@ -174,12 +145,12 @@ manhattan(
   bp = "POS",
   p = "P",
   snp = "ID",
-  main = "Manhattan plot",
+  main = paste0("random pheno ", pheno_code, " (", title_prefix, ")", " - Manhattan plot"),
   suggestiveline = F,
   genomewideline = -log10(5e-08),
   cex = 0.6,
   cex.axis = 0.9,
-  ylim = c(0, 10),
+  ylim = c(0, max(gwas_max_mlog_noninf+1, 10)),
 )
 
 # %% [markdown]
@@ -188,55 +159,9 @@ manhattan(
 # %%
 options(repr.plot.width = 10, repr.plot.height = 10)
 
-qq(gwas$P, main = "Q-Q plot of GWAS p-values")
-
-# %% [markdown] tags=[]
-# # Random pheno 3
-
-# %% [markdown] tags=[]
-# ## Load data
-
-# %% tags=[]
-gwas <- as.data.frame(read_table(file.path(GWAS_DIR, "random.pheno3.glm.linear.tsv.gz")))
-
-# %% tags=[]
-dim(gwas)
-
-# %% tags=[]
-head(gwas)
-
-# %%
-gwas <- gwas %>% filter(P >= 0 & P <= 1)
-
-# %%
-dim(gwas)
-
-# %% [markdown]
-# ## Manhattan plot
-
-# %%
-options(repr.plot.width = 20, repr.plot.height = 10)
-
-manhattan(
-  gwas,
-  chr = "#CHROM",
-  bp = "POS",
-  p = "P",
-  snp = "ID",
-  main = "Manhattan plot",
-  suggestiveline = F,
-  genomewideline = -log10(5e-08),
-  cex = 0.6,
-  cex.axis = 0.9,
-  ylim = c(0, 10),
+qq(
+    gwas$P,
+    main = paste0("random pheno ", pheno_code, " (", title_prefix, ")", " - QQ plot of GWAS p-values")
 )
-
-# %% [markdown]
-# ## QQ-plot
-
-# %%
-options(repr.plot.width = 10, repr.plot.height = 10)
-
-qq(gwas$P, main = "Q-Q plot of GWAS p-values")
 
 # %%

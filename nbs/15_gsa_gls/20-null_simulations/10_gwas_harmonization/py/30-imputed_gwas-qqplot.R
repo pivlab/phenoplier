@@ -41,14 +41,14 @@ GLS_NULL_SIMS_DIR
 GWAS_DIR <- file.path(
     GLS_NULL_SIMS_DIR,
     "_pvalue",
-    "harmonized_gwas"
+    "post_imputed_gwas"
 )
 
 # %% tags=[]
 GWAS_DIR
 
 # %%
-title_prefix = "harmonized"
+title_prefix = "imputed"
 
 # %% [markdown] tags=[]
 # # Random pheno 0 (beta/se)
@@ -60,7 +60,7 @@ pheno_code <- "0"
 # ## Load data
 
 # %% tags=[]
-gwas <- as.data.frame(read_table(file.path(GWAS_DIR, paste0("random.pheno", pheno_code,".glm.linear.tsv-harmonized.txt"))))
+gwas <- as.data.frame(read_table(file.path(GWAS_DIR, paste0("random.pheno", pheno_code,".glm-imputed.txt.gz"))))
 
 # %% tags=[]
 dim(gwas)
@@ -173,7 +173,7 @@ manhattan(
   genomewideline = -log10(5e-08),
   cex = 0.6,
   cex.axis = 0.9,
-  ylim = c(0, max(gwas_max_mlog_noninf+1, 10)),
+  ylim = c(0, gwas_max_mlog_noninf+1),
 )
 
 # %% [markdown] tags=[]
@@ -197,7 +197,7 @@ pheno_code <- "0"
 # ## Load data
 
 # %% tags=[]
-gwas <- as.data.frame(read_table(file.path(GWAS_DIR, paste0("random.pheno", pheno_code,".glm.linear.tsv-harmonized.txt"))))
+gwas <- as.data.frame(read_table(file.path(GWAS_DIR, paste0("random.pheno", pheno_code,".glm-imputed.txt.gz"))))
 
 # %% tags=[]
 dim(gwas)
@@ -310,7 +310,7 @@ manhattan(
   genomewideline = -log10(5e-08),
   cex = 0.6,
   cex.axis = 0.9,
-  ylim = c(0, max(gwas_max_mlog_noninf+1, 10)),
+  ylim = c(0, gwas_max_mlog_noninf+1),
 )
 
 # %% [markdown] tags=[]
