@@ -113,28 +113,37 @@ Here we need to use some templating, because we impute across random phenotypes,
 Batch ids are used to split jobs more and thus parallelize across more nodes.
 
 ```bash
-mkdir -p _tmp/imputation
+# in Alpine, you need to run the code below in an interactive session (few resources, but
+# enough time to check the number of jobs in parallel and submit them in batches)
+# here I request 12 hours and 2GB of memory
+sinteractive --partition=amilan --time=12:00:00 --nodes=1 --ntasks=1 --mem=16GB --account=amc-general
+```
 
-# Iterate over all random phenotype ids, chromosomes and batch ids and submit a job for each combination.
-# IMPORTANT: These are a lot of tasks. You might want to split jobs by chaning the range in first for line:
-#   0..199
-#   200..399
-#   400..599
-#   600..799
-#   800..999
-for pheno_id in {0..999}; do
-  for chromosome in {1..22}; do
-    for batch_id in {0..9}; do
-      export pheno_id chromosome batch_id
-      cat cluster_jobs/05_imputation_job-template.sh | envsubst '${pheno_id} ${chromosome} ${batch_id}' | sbatch
-    done
-  done
-done
+```bash
+cd nbs/15_gsa_gls/20-null_simulations/10_gwas_harmonization
+
+run_job() {
+  export pheno_id=$1
+  export chromosome=$2
+  export batch_id=$3
+  
+  cat cluster_jobs/05_imputation_job-template.sh | envsubst '${pheno_id} ${chromosome} ${batch_id}' | ${PHENOPLIER_JOBS_EXECUTOR}
+}
+
+export -f run_job
+
+# (optional) export function definition so it's included in the Docker container
+export PHENOPLIER_BASH_FUNCTIONS_CODE="$(declare -f run_job)"
+
+# Run
+parallel -j10 run_job {} ::: {0..99} ::: {1..22} ::: {0..9}
 ```
 
 Check logs with:
 ```bash
-bash check_job.sh -i _tmp/imputation/
+bash check_job.sh \
+  -i ${PHENOPLIER_RESULTS_GLS_NULL_SIMS}/imputed_gwas \
+  -p "INFO - Finished in"
 ```
 
 There should be 220,000 files in the output directory: 22 chromosomes * 10 batches * 1000 random phenotypes.
@@ -198,23 +207,35 @@ Try to increment the maximum time limit for the job (in the job template file) a
 ## Post-processing
 
 ```bash
-for pheno_id in {0..999}; do
-  export pheno_id
-  cat cluster_jobs/10_postprocessing_job-template.sh | envsubst '${pheno_id}' | sbatch
-done
+cd nbs/15_gsa_gls/20-null_simulations/10_gwas_harmonization
+
+run_job() {
+  export pheno_id=$1
+  
+  cat cluster_jobs/10_postprocessing_job-template.sh | envsubst '${pheno_id}' | ${PHENOPLIER_JOBS_EXECUTOR}
+}
+
+export -f run_job
+
+# (optional) export function definition so it's included in the Docker container
+export PHENOPLIER_BASH_FUNCTIONS_CODE="$(declare -f run_job)"
+
+# Run
+parallel -j10 run_job {} ::: {0..99}
 ```
 
 Check logs with:
-```bash
-bash check_job.sh -i _tmp/postprocessing
-```
 
-Another check is to count how many parts were processed for each random phenotype.
-It should be 22 chromosomes times 10 batches (220), see code below.
-The `-p` parameter is the success pattern, a chunk of text that has to be found in the input files as certain number of times (`-c`).
 ```bash
 bash check_job.sh \
-  -i _tmp/postprocessing/ \
+  -i ${PHENOPLIER_RESULTS_GLS_NULL_SIMS}/post_imputed_gwas \
+  -p "INFO - Finished in"
+
+# Another check is to count how many parts were processed for each random phenotype.
+# It should be 22 chromosomes times 10 batches (220), see code below.
+# The `-p` parameter is the success pattern, a chunk of text that has to be found in the input files as certain number of times (`-c`).
+bash check_job.sh \
+  -i ${PHENOPLIER_RESULTS_GLS_NULL_SIMS}/post_imputed_gwas \
   -p "INFO - Processing imputed random" \
   -c 220
 
