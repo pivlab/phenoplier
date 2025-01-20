@@ -24,7 +24,7 @@ export NUMEXPR_NUM_THREADS=${n_jobs}
 export OMP_NUM_THREADS=${n_jobs}
 
 # Settings
-COHORT_NAME="1000g_eur"
+COHORT_NAME="ukbb_eur"
 REFERENCE_PANEL="gtex_v8"
 USING_COVARS="covars"
 

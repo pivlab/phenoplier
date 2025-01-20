@@ -5,43 +5,44 @@ This folder has the scripts to run GLS PhenoPLIER (associations between LVs/gene
 Before running these steps, **it is necessary** to generate a correlation matrix for predicted gene expression _specific_ for these random phenotypes (see `nbs/15_gsa_gls/README.md`).
 
 
-## Setup
+# Load Alpine-specific paths and PhenoPLIER configuration
 
-### Penn's LPC cluster
-
-Load Penn's LPC-specific paths and PhenoPLIER configuration.
-Change paths accordingly.
+You need to run `acompile` to start a new interactive session before running the
+commands below.
 
 ```bash
 # load conda environment
-module load miniconda/3
-conda activate ~/software/conda_envs/phenoplier/
+module load mambaforge/23.1.0-1 gnu_parallel/20210322
+mamba activate phenoplier_light
 
-# load LPC-specific paths
-. ~/projects/phenoplier/scripts/pmacs_penn/env.sh
-
-# set the executor of commands to "bsub" (to submit the jobs)
-export PHENOPLIER_JOBS_EXECUTOR="bsub"
+# load PhenoPLIER config
+. /pl/active/pivlab/projects/mpividori/phenoplier/scripts/alpine/env.sh
 
 # load in bash session all PhenoPLIER environmental variables
-eval `python ~/projects/phenoplier/libs/conf.py`
+eval `python ${PHENOPLIER_CODE_DIR}/libs/conf.py`
 
 # make sure they were loaded correctly
 # should output something like /project/...
 echo $PHENOPLIER_ROOT_DIR
 ```
 
-### Desktop computer
+# Desktop computer
 
-Set the executor to bash:
 ```bash
+# load conda environment
+conda activate phenoplier_light
+
+# load PhenoPLIER config
+. scripts/env.sh
+
+# load in bash session all PhenoPLIER environmental variables
+eval `python ${PHENOPLIER_CODE_DIR}/libs/conf.py`
+
+# Set executor
 export PHENOPLIER_JOBS_EXECUTOR="bash"
-```
 
-For this, it's convenient to use Docker by running the specified command between single quotes:
-
-```bash
-bash scripts/run_docker_dev.sh '[COMMAND]'
+# make sure they were loaded correctly
+echo $PHENOPLIER_ROOT_DIR
 ```
 
 
@@ -66,19 +67,15 @@ python ~/projects/phenoplier/environment/scripts/setup_data.py \
 
 The `cluster_jobs/` folder has the job scripts to run on Penn's LPC cluster.
 To run the jobs in order, you need to execute the command below.
-The `_tmp` folder stores logs and needs to be created.
-
 
 ## Run LV-trait associations
 
-
 ```bash
+cd nbs/15_gsa_gls/20-null_simulations/20_gls_phenoplier
+
 run_job () {
   cluster_job_file="$1"
   export pheno_id="$2"
-  
-  mkdir -p _tmp/gls_phenoplier_ols
-  mkdir -p _tmp/gls_phenoplier
   
   cat $cluster_job_file | envsubst '${pheno_id}' | ${PHENOPLIER_JOBS_EXECUTOR}
 }
@@ -89,56 +86,14 @@ export -f run_job
 export PHENOPLIER_BASH_FUNCTIONS_CODE="$(declare -f run_job)"
 ```
 
-### No covariates
-
-```bash
-# (optional) Run OLS model
-parallel -j10 run_job cluster_jobs/no_covars/01_gls-use_ols-template.sh {} ::: {0..999}
-
-# GLS:
-# parallel -j10 run_job cluster_jobs/no_covars/10_gls_phenoplier-full_corr-template.sh {} ::: {0..999}
-parallel -j10 run_job cluster_jobs/no_covars/10_gls_phenoplier-sub_corr-template.sh {} ::: {0..999}
-```
-
-Command for checking results:
-
-```bash
-bash ${PHENOPLIER_CODE_DIR}/scripts/check_job.sh \
-    -i _tmp/ \
-    -f '*.error' \
-    -p "INFO: Writing results to"
-
-bash ${PHENOPLIER_CODE_DIR}/scripts/check_job.sh \
-    -i _tmp/ \
-    -f '*.error' \
-    -n "INFO: Using covariates"
-
-# for OLS
-bash ${PHENOPLIER_CODE_DIR}/scripts/check_job.sh \
-    -i _tmp/gls_phenoplier_ols/ \
-    -f '*.error' \
-    -p "INFO: Using a Ordinary Least Squares (OLS) model"
-
-
-# for GLS
-bash ${PHENOPLIER_CODE_DIR}/scripts/check_job.sh \
-    -i _tmp/gls_phenoplier/ \
-    -f '*.error' \
-    -p "INFO: Correlation matrix is a directory"
-```
-
 ### With covariates
 
 ```bash
-# recommended
-rm -rf _tmp/
-
 # (optional) Run OLS model
-parallel -j10 run_job cluster_jobs/covars/01_gls-use_ols-template.sh {} ::: {0..999}
+#parallel -j10 run_job cluster_jobs/covars/01_gls-use_ols-template.sh {} ::: {0..999}
 
 # GLS:
-# parallel -j10 cluster_jobs/covars/10_gls_phenoplier-full_corr-template.sh {} ::: {0..999}
-parallel -j10 run_job cluster_jobs/covars/10_gls_phenoplier-sub_corr-template.sh {} ::: {0..999}
+parallel -j10 run_job cluster_jobs/covars/10_gls_phenoplier-sub_corr-template.sh {} ::: {0..99}
 ```
 
 ```bash

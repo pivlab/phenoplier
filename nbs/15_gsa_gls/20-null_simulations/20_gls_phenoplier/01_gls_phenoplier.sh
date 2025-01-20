@@ -148,5 +148,4 @@ python ${PHENOPLIER_CODE_DIR}/libs/gls_cli.py \
     -i ${INPUT_FILE} \
     --duplicated-genes-action keep-first \
     ${GENE_CORRS_ARGS} \
-    -o ${OUTPUT_FILE} ${BATCH_ARGS} ${LV_LIST_ARGS} ${COVARS_ARGS} ${COHORT_ARGS}
-
+    -o ${OUTPUT_FILE} ${BATCH_ARGS} ${LV_LIST_ARGS} ${COVARS_ARGS} ${COHORT_ARGS} 2>&1 | tee ${OUTPUT_FILE}.log
