@@ -59,7 +59,6 @@ python ~/projects/phenoplier/environment/scripts/setup_data.py \
 
 The `cluster_jobs/` folder has the job scripts to run on Penn's LPC cluster.
 To run the jobs in order, you need to execute the command below.
-The `_tmp` folder stores logs and needs to be created.
 
 ## S-PrediXcan
 

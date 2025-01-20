@@ -102,6 +102,6 @@ mkdir -p ${OUTPUT_DIR}
 ${PYTHON_EXECUTABLE} ${PHENOPLIER_GWAS_IMPUTATION_BASE_DIR}/src/gwas_summary_imputation_postprocess.py \
     -gwas_file ${INPUT_GWAS_FILE} \
     -folder ${IMPUTED_GWAS_FOLDER} \
-    -pattern ${PHENOTYPE_NAME}.*.txt \
+    -pattern "${PHENOTYPE_NAME}.*.txt$" \
     -parsimony 7 \
     -output ${OUTPUT_DIR}/${PHENOTYPE_NAME}-imputed.txt.gz 2>&1 | tee ${OUTPUT_DIR}/${PHENOTYPE_NAME}-imputed.log

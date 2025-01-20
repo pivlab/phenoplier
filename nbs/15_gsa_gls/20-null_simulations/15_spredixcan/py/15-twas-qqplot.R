@@ -110,4 +110,248 @@ qq(
     main = paste0("random pheno ", pheno_code, " - QQ plot of S-MultiXcan")
 )
 
+# %% [markdown] tags=[]
+# # Random pheno 1
+
+# %%
+pheno_code <- "1"
+
+# %% [markdown] tags=[]
+# ## S-PrediXcan
+
+# %%
+tissue <- "Whole_Blood"
+
+# %% [markdown] tags=[]
+# ### Load data
+
+# %% tags=[]
+twas <- as.data.frame(read_csv(file.path(SPREDIXCAN_DIR, paste0("random.pheno", pheno_code,"-gtex_v8-mashr-", tissue,".csv"))))
+
+# %% tags=[]
+dim(twas)
+
+# %% tags=[]
+head(twas)
+
+# %% [markdown] tags=[]
+# ### QQ-plot
+
+# %% tags=[]
+options(repr.plot.width = 10, repr.plot.height = 10)
+
+qq(
+    twas$pvalue,
+    main = paste0("random pheno ", pheno_code, " - QQ plot of S-PrediXcan - ", tissue)
+)
+
+# %% [markdown] tags=[]
+# ## S-MultiXcan
+
+# %% [markdown] tags=[]
+# ### Load data
+
+# %% tags=[]
+twas <- as.data.frame(read_table(file.path(SMULTIXCAN_DIR, paste0("random.pheno", pheno_code, "-gtex_v8-mashr-smultixcan.txt"))))
+
+# %% tags=[]
+dim(twas)
+
+# %% tags=[]
+head(twas)
+
+# %% [markdown] tags=[]
+# ### QQ-plot
+
+# %% tags=[]
+options(repr.plot.width = 10, repr.plot.height = 10)
+
+qq(
+    twas$pvalue,
+    main = paste0("random pheno ", pheno_code, " - QQ plot of S-MultiXcan")
+)
+
+# %% [markdown] tags=[]
+# # Random pheno 2
+
+# %%
+pheno_code <- "2"
+
+# %% [markdown] tags=[]
+# ## S-PrediXcan
+
+# %%
+tissue <- "Whole_Blood"
+
+# %% [markdown] tags=[]
+# ### Load data
+
+# %% tags=[]
+twas <- as.data.frame(read_csv(file.path(SPREDIXCAN_DIR, paste0("random.pheno", pheno_code,"-gtex_v8-mashr-", tissue,".csv"))))
+
+# %% tags=[]
+dim(twas)
+
+# %% tags=[]
+head(twas)
+
+# %% [markdown] tags=[]
+# ### QQ-plot
+
+# %% tags=[]
+options(repr.plot.width = 10, repr.plot.height = 10)
+
+qq(
+    twas$pvalue,
+    main = paste0("random pheno ", pheno_code, " - QQ plot of S-PrediXcan - ", tissue)
+)
+
+# %% [markdown] tags=[]
+# ## S-MultiXcan
+
+# %% [markdown] tags=[]
+# ### Load data
+
+# %% tags=[]
+twas <- as.data.frame(read_table(file.path(SMULTIXCAN_DIR, paste0("random.pheno", pheno_code, "-gtex_v8-mashr-smultixcan.txt"))))
+
+# %% tags=[]
+dim(twas)
+
+# %% tags=[]
+head(twas)
+
+# %% [markdown] tags=[]
+# ### QQ-plot
+
+# %% tags=[]
+options(repr.plot.width = 10, repr.plot.height = 10)
+
+qq(
+    twas$pvalue,
+    main = paste0("random pheno ", pheno_code, " - QQ plot of S-MultiXcan")
+)
+
+# %% [markdown] tags=[]
+# # Random pheno 3
+
+# %%
+pheno_code <- "3"
+
+# %% [markdown] tags=[]
+# ## S-PrediXcan
+
+# %%
+tissue <- "Whole_Blood"
+
+# %% [markdown] tags=[]
+# ### Load data
+
+# %% tags=[]
+twas <- as.data.frame(read_csv(file.path(SPREDIXCAN_DIR, paste0("random.pheno", pheno_code,"-gtex_v8-mashr-", tissue,".csv"))))
+
+# %% tags=[]
+dim(twas)
+
+# %% tags=[]
+head(twas)
+
+# %% [markdown] tags=[]
+# ### QQ-plot
+
+# %% tags=[]
+options(repr.plot.width = 10, repr.plot.height = 10)
+
+qq(
+    twas$pvalue,
+    main = paste0("random pheno ", pheno_code, " - QQ plot of S-PrediXcan - ", tissue)
+)
+
+# %% [markdown] tags=[]
+# ## S-MultiXcan
+
+# %% [markdown] tags=[]
+# ### Load data
+
+# %% tags=[]
+twas <- as.data.frame(read_table(file.path(SMULTIXCAN_DIR, paste0("random.pheno", pheno_code, "-gtex_v8-mashr-smultixcan.txt"))))
+
+# %% tags=[]
+dim(twas)
+
+# %% tags=[]
+head(twas)
+
+# %% [markdown] tags=[]
+# ### QQ-plot
+
+# %% tags=[]
+options(repr.plot.width = 10, repr.plot.height = 10)
+
+qq(
+    twas$pvalue,
+    main = paste0("random pheno ", pheno_code, " - QQ plot of S-MultiXcan")
+)
+
+# %% [markdown] tags=[]
+# # Random pheno 4
+
+# %%
+pheno_code <- "4"
+
+# %% [markdown] tags=[]
+# ## S-PrediXcan
+
+# %%
+tissue <- "Whole_Blood"
+
+# %% [markdown] tags=[]
+# ### Load data
+
+# %% tags=[]
+twas <- as.data.frame(read_csv(file.path(SPREDIXCAN_DIR, paste0("random.pheno", pheno_code,"-gtex_v8-mashr-", tissue,".csv"))))
+
+# %% tags=[]
+dim(twas)
+
+# %% tags=[]
+head(twas)
+
+# %% [markdown] tags=[]
+# ### QQ-plot
+
+# %% tags=[]
+options(repr.plot.width = 10, repr.plot.height = 10)
+
+qq(
+    twas$pvalue,
+    main = paste0("random pheno ", pheno_code, " - QQ plot of S-PrediXcan - ", tissue)
+)
+
+# %% [markdown] tags=[]
+# ## S-MultiXcan
+
+# %% [markdown] tags=[]
+# ### Load data
+
+# %% tags=[]
+twas <- as.data.frame(read_table(file.path(SMULTIXCAN_DIR, paste0("random.pheno", pheno_code, "-gtex_v8-mashr-smultixcan.txt"))))
+
+# %% tags=[]
+dim(twas)
+
+# %% tags=[]
+head(twas)
+
+# %% [markdown] tags=[]
+# ### QQ-plot
+
+# %% tags=[]
+options(repr.plot.width = 10, repr.plot.height = 10)
+
+qq(
+    twas$pvalue,
+    main = paste0("random pheno ", pheno_code, " - QQ plot of S-MultiXcan")
+)
+
 # %% tags=[]
