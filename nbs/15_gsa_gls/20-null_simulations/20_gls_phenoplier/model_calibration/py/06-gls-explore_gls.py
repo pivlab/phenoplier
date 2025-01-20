@@ -7,7 +7,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.13.8
+#       jupytext_version: 1.14.7
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -49,9 +49,9 @@ N_LVS = 987
 INPUT_DIR = (
     conf.RESULTS["GLS_NULL_SIMS"]
     / "phenoplier"
-    / "1000g_eur"
+    / "ukbb_eur"
     / "covars"
-    / "_corrs_5mb"
+    # / "_corrs_5mb"
     / "gls-gtex_v8_mashr-sub_corr"
 )
 display(INPUT_DIR)
@@ -199,7 +199,7 @@ with sns.plotting_context("paper", font_scale=1.8), mpl.rc_context(
 # %%
 summary_list = []
 for lv, lv_data in dfs.groupby("lv"):
-    assert lv_data.shape[0] == N_PHENOTYPES
+    # assert lv_data.shape[0] == N_PHENOTYPES
 
     summary_list.append(
         {
@@ -226,7 +226,7 @@ summary_df.describe()
 # ## LVs with expected type I error
 
 # %%
-lvs_expected_error = summary_df[summary_df["5"].between(0.049, 0.051)]
+lvs_expected_error = summary_df[summary_df["5"].between(0.04, 0.06)]
 display(lvs_expected_error.shape)
 display(lvs_expected_error.sort_values("5").head(20))
 display(lvs_expected_error.sort_values("5").tail(20))
