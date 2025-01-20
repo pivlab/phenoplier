@@ -27,7 +27,7 @@ if [[ $input_notebook == $pattern ]]; then
     exit 0
 fi
 
-override_nbs=${PHENOPLIER_RUN_NBS_OVERRIDE}
+override_nbs=${PHENOPLIER_RUN_NBS_OVERRIDE:-1}
 
 # if second argument is a notebook, then it is the output
 # notebook filename

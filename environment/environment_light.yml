@@ -4,7 +4,7 @@ channels:
   - defaults
 dependencies:
   - fastparquet=0.8.*
-  - ipython
+  - ipython=8.23.*
   - jupyterlab=3.5.*
   - jupytext=1.14.*
   - numpy=1.23.*

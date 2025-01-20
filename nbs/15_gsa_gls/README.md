@@ -17,24 +17,18 @@ For most of these it is necessary to specify a cohort, the prediction models of 
 
 Use instructions below according to whether you want to run these steps in a cluster or a desktop computer.
 
-### Penn's LPC cluster
-
-Load Penn's LPC-specific paths and PhenoPLIER configuration.
-Change paths accordingly.
+### Load Alpine-specific paths and PhenoPLIER configuration
 
 ```bash
 # load conda environment
-module load miniconda/3
-conda activate ~/software/conda_envs/phenoplier/
+module load mambaforge/23.1.0-1 gnu_parallel/20210322
+mamba activate phenoplier_light
 
-# load LPC-specific paths
-. ~/projects/phenoplier/scripts/pmacs_penn/env.sh
-
-# set the executor of commands to "bsub" (to submit the jobs)
-export PHENOPLIER_JOBS_EXECUTOR="bsub"
+# load PhenoPLIER config
+. /pl/active/pivlab/projects/mpividori/phenoplier/scripts/alpine/env.sh
 
 # load in bash session all PhenoPLIER environmental variables
-eval `python ~/projects/phenoplier/libs/conf.py`
+eval `python ${PHENOPLIER_CODE_DIR}/libs/conf.py`
 
 # make sure they were loaded correctly
 # should output something like /project/...
@@ -44,20 +38,27 @@ echo $PHENOPLIER_ROOT_DIR
 ### Desktop computer
 
 ```bash
-# set the executor of commands to "bash" (so commands are run in the terminal)
+# load conda environment
+conda activate phenoplier_light
+
+# load PhenoPLIER config
+. scripts/env.sh
+
+# load in bash session all PhenoPLIER environmental variables
+eval `python ${PHENOPLIER_CODE_DIR}/libs/conf.py`
+
+# Set executor
 export PHENOPLIER_JOBS_EXECUTOR="bash"
-```
 
-For this, it's convenient to use Docker by running the specified command between single quotes:
-
-```bash
-bash scripts/run_docker_dev.sh '[COMMAND]'
+# make sure they were loaded correctly
+echo $PHENOPLIER_ROOT_DIR
 ```
 
 
 ## `05-snps_into_chr_cov.ipynb`
 
-This notebook computes the covariance for each chromosome of all variants present in prediction models. It's convenient to run this step in the desktop computer:
+This notebook computes the covariance for each chromosome of all variants present in prediction models.
+It's convenient to run this step in the desktop computer:
 
 ```bash
 compute_snps_cov () {
@@ -80,18 +81,19 @@ compute_snps_cov () {
 # (optional) export function definition so it's included in the Docker container
 export PHENOPLIER_BASH_FUNCTIONS_CODE="$(declare -f compute_snps_cov)"
 
-compute_snps_cov 1000G MASHR
-compute_snps_cov 1000G ELASTIC_NET
+#compute_snps_cov 1000G MASHR
+#compute_snps_cov 1000G ELASTIC_NET
 compute_snps_cov GTEX_V8 MASHR
-compute_snps_cov GTEX_V8 ELASTIC_NET
+#compute_snps_cov GTEX_V8 ELASTIC_NET
 ```
 
 
 ## `07-compile_gwas_snps_and_twas_genes.ipynb`
 
-This notebook compiles information about the GWAS and TWAS for a particular cohort. For example, the set of GWAS variants, variance of predicted expression of genes, etc.
+This notebook compiles information about the GWAS and TWAS for a particular cohort.
+For example, the set of GWAS variants, variance of predicted expression of genes, etc.
 
-For advanced users: it's not necessary to wait until the script finish to kick off the next step (gene correlations), since this
+For advanced users: it's not necessary to wait until the script finishes to kick off the next step (gene correlations), since this
 script computes potential covariates for GLS and that's not necessary for the next steps.
 
 ```bash
@@ -105,8 +107,6 @@ run_job () {
   export ref_panel_param="$7"
   export eqtl_model_param="$8"
   
-  mkdir -p _tmp/compile_gwas_twas
-  
   cat $cluster_job_file | envsubst '${cohort_name_param} ${gwas_file_param} ${spredixcan_folder_param} ${spredixcan_file_pattern_param} ${} ${smultixcan_file_param} ${ref_panel_param} ${eqtl_model_param}' | ${PHENOPLIER_JOBS_EXECUTOR}
 }
 
@@ -119,11 +119,11 @@ export PHENOPLIER_BASH_FUNCTIONS_CODE="$(declare -f run_job)"
 # For null simulations
 #
 
-# GTEx v8 models and 1000G GWAS on random phenotypes
+# GTEx v8 models and UKBB GWAS on random phenotypes
 # GWAS/TWAS results need to be already generated (see `20-null_simulations`)
 run_job \
     nbs/15_gsa_gls/cluster_jobs/07_gls-compile_gwas_snps_and_twas_genes-template.sh \
-    1000g_eur \
+    ukbb_eur \
     ${PHENOPLIER_RESULTS_GLS_NULL_SIMS}/final_imputed_gwas/random.pheno0.glm-imputed.txt.gz \
     ${PHENOPLIER_RESULTS_GLS_NULL_SIMS}/twas/spredixcan/ \
     random.pheno0-gtex_v8-mashr-{tissue}.csv \
@@ -244,8 +244,6 @@ run_job () {
   export eqtl_model_param="$4"
   export chr_param="$5"
   
-  mkdir -p _tmp/gene_corrs
-  
   cat $cluster_job_file | envsubst '${cohort_name_param} ${ref_panel_param} ${eqtl_model_param} ${chr_param}' | ${PHENOPLIER_JOBS_EXECUTOR}
 }
 
@@ -260,10 +258,10 @@ export PHENOPLIER_BASH_FUNCTIONS_CODE="$(declare -f run_job)"
 #
 
 # GTEx v8 models and 1000G GWAS on random phenotypes
-parallel -j10 \
+parallel -j2 \
     run_job \
     nbs/15_gsa_gls/cluster_jobs/10_gls-gene_corrs-template.sh \
-    1000g_eur \
+    ukbb_eur \
     GTEX_V8 \
     MASHR \
     '{}' ::: {1..22}
@@ -334,8 +332,6 @@ run_job () {
   export ref_panel_param="$3"
   export eqtl_model_param="$4"
   
-  mkdir -p _tmp/post_gene_corrs
-  
   cat $cluster_job_file | envsubst '${cohort_name_param} ${ref_panel_param} ${eqtl_model_param}' | ${PHENOPLIER_JOBS_EXECUTOR}
 }
 
@@ -351,7 +347,7 @@ export PHENOPLIER_BASH_FUNCTIONS_CODE="$(declare -f run_job)"
 # GTEx v8 models and 1000G GWAS on random phenotypes
 run_job \
     nbs/15_gsa_gls/cluster_jobs/15-postprocess_gene_corrs.sh \
-    1000g_eur \
+    ukbb_eur \
     GTEX_V8 \
     MASHR
 
@@ -404,7 +400,8 @@ bash scripts/check_job.sh \
 
 ## `16-create_within_distance_matrices.ipynb`
 
-This notebook reads the correlation matrix generated and creates new matrices with different "within distances" across genes. For example, it generates a new correlation matrix with only genes within a distance of 10mb.
+This notebook reads the correlation matrix generated and creates new matrices with different "within distances" across genes.
+For example, it generates a new correlation matrix with only genes within a distance of 10mb.
 
 ```bash
 run_job () {
@@ -412,8 +409,6 @@ run_job () {
   export cohort_name_param="$2"
   export ref_panel_param="$3"
   export eqtl_model_param="$4"
-  
-  mkdir -p _tmp/create_within_dist
   
   cat $cluster_job_file | envsubst '${cohort_name_param} ${ref_panel_param} ${eqtl_model_param}' | ${PHENOPLIER_JOBS_EXECUTOR}
 }
@@ -430,7 +425,7 @@ export PHENOPLIER_BASH_FUNCTIONS_CODE="$(declare -f run_job)"
 # GTEx v8 models and 1000G GWAS on random phenotypes
 run_job \
     nbs/15_gsa_gls/cluster_jobs/16-create_within_distances.sh \
-    1000g_eur \
+    ukbb_eur \
     GTEX_V8 \
     MASHR
 
@@ -496,8 +491,6 @@ run_job () {
   export lv_code_param="$5"
   export lv_perc_param="$6"
   
-  mkdir -p _tmp/corr_mat_per_lv
-  
   cat $cluster_job_file | envsubst '${cohort_name_param} ${ref_panel_param} ${eqtl_model_param} ${lv_code_param} ${lv_perc_param}' | ${PHENOPLIER_JOBS_EXECUTOR}
 }
 
@@ -519,7 +512,7 @@ export PHENOPLIER_BASH_FUNCTIONS_CODE="$(declare -f run_job)"
 parallel -k --lb --halt 2 -j10 \
     run_job \
     nbs/15_gsa_gls/cluster_jobs/18-create_corr_mat_per_lv.sh \
-    1000g_eur \
+    ukbb_eur \
     GTEX_V8 \
     MASHR \
     LV{} \
@@ -579,41 +572,4 @@ bash scripts/check_job.sh \
     -i _tmp/corr_mat_per_lv \
     -f '*.error' \
     -p "\[NbConvertApp\] Converting notebook"
-```
-
-
-## GLS on PhenomeXcan
-
-PhenomeXcan is a TWAS resource derived from 4091 publicly available GWAS.
-
-```bash
-mkdir -p _tmp/gls_phenoplier_phenomexcan
-```
-
-```python
-import os
-import re
-
-import conf
-
-smultixcan_results_dir = conf.PHENOMEXCAN["SMULTIXCAN_MASHR_RESULTS_DIR"]
-
-# Rapid GWAS project
-results_files = list(smultixcan_results_dir.rglob("*.tsv.gz"))
-pheno_pattern = re.compile(r"smultixcan_(?P<pheno_code>.+)_ccn30.tsv.gz")
-pheno_codes = [pheno_pattern.search(f.name).group("pheno_code") for f in results_files]
-assert len(results_files) == len(pheno_codes)
-for pheno_filepath, pheno_code in zip([results_files[0]], [pheno_codes[0]]):
-    pheno_filepath = str(pheno_filepath)
-    os.system(
-        f"export pheno_filepath={pheno_filepath} pheno_code={pheno_code}; " +
-        "cat cluster_jobs/01_gls_phenoplier-phenomexcan-sub_corr-template.sh | envsubst '${pheno_filepath} ${pheno_code}' | bsub"
-    )
-
-
-# TODO: GTEX-GWAS
-results_files = list(smultixcan_results_dir.rglob("*.txt.gz"))
-
-
-
 ```

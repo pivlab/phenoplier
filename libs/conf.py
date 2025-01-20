@@ -184,15 +184,15 @@ UK_BIOBANK["UKBCODE_TO_EFO_MAP_FILE"] = Path(
 # MultiPLIER
 #
 MULTIPLIER = {}
-MULTIPLIER["BASE_DIR"] = Path(DATA_DIR, "multiplier").resolve()
+MULTIPLIER["BASE_DIR"] = Path(DATA_DIR, "lv_models", "recount2").resolve()
 MULTIPLIER["MODEL_SUMMARY_FILE"] = Path(
     MULTIPLIER["BASE_DIR"], "multiplier_model_summary.pkl"
 ).resolve()
 MULTIPLIER["MODEL_Z_MATRIX_FILE"] = Path(
-    MULTIPLIER["BASE_DIR"], "multiplier_model_z.pkl"
+    MULTIPLIER["BASE_DIR"], "z.pkl"
 ).resolve()
 MULTIPLIER["MODEL_B_MATRIX_FILE"] = Path(
-    MULTIPLIER["BASE_DIR"], "multiplier_model_b.pkl"
+    MULTIPLIER["BASE_DIR"], "b.pkl"
 ).resolve()
 MULTIPLIER["MODEL_U_MATRIX_FILE"] = Path(
     MULTIPLIER["BASE_DIR"], "multiplier_model_u.pkl"
@@ -218,7 +218,7 @@ PHENOMEXCAN["BASE_DIR"] = Path(DATA_DIR, "twas").resolve()
 
 # genes metadata and mappings
 PHENOMEXCAN["GENES_METADATA_DIR"] = Path(
-    PHENOMEXCAN["BASE_DIR"], "genes_metadata"
+    PHENOMEXCAN["BASE_DIR"], "predixcan", "genes_metadata"
 ).resolve()
 PHENOMEXCAN["GENE_MAP_ID_TO_NAME"] = Path(
     PHENOMEXCAN["GENES_METADATA_DIR"],

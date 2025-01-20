@@ -7,7 +7,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.13.8
+#       jupytext_version: 1.14.7
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -129,7 +129,7 @@ _tmp = get_reference_panel_file(
 assert _tmp is not None
 assert (
     _tmp.name
-    == "gtex_v8_eur_filtered_maf0.01_monoallelic_variants.chr1.variants.parquet"
+    == "chr1.variants.parquet"
 )
 
 _tmp = get_reference_panel_file(
@@ -138,30 +138,8 @@ _tmp = get_reference_panel_file(
 assert _tmp is not None
 assert (
     _tmp.name
-    == "gtex_v8_eur_filtered_maf0.01_monoallelic_variants.variants_metadata.parquet"
+    == "variants_metadata.parquet"
 )
-
-# 1000G
-_tmp = get_reference_panel_file(
-    conf.PHENOMEXCAN["LD_BLOCKS"]["1000G_GENOTYPE_DIR"], "chr1.variants"
-)
-assert _tmp is not None
-assert _tmp.name == "chr1.variants.parquet"
-
-_tmp = get_reference_panel_file(
-    conf.PHENOMEXCAN["LD_BLOCKS"]["1000G_GENOTYPE_DIR"], "_metadata"
-)
-assert _tmp is not None
-assert _tmp.name == "variant_metadata.parquet"
-
-# pattern matches more than one file
-try:
-    get_reference_panel_file(
-        conf.PHENOMEXCAN["LD_BLOCKS"]["1000G_GENOTYPE_DIR"], "chr1"
-    )
-    raise AssertionError("Exception was not raised")
-except AssertionError as e:
-    assert "More than one file was found" in str(e)
 
 # %% [markdown] tags=[]
 # ## SNPs in predictions models
@@ -440,14 +418,9 @@ del _tmp_snps, _tmp
 # ## Compute covariance and save
 
 # %% tags=[]
-output_file_name_template = conf.PHENOMEXCAN["LD_BLOCKS"][
-    "GENE_CORRS_FILE_NAME_TEMPLATES"
-]["SNPS_COVARIANCE"]
+output_file_name_template = "snps_chr_blocks_cov.h5"
 
-output_file = OUTPUT_DIR_BASE / output_file_name_template.format(
-    prefix="",
-    suffix="",
-)
+output_file = OUTPUT_DIR_BASE / output_file_name_template
 display(output_file)
 
 # %% tags=[]
