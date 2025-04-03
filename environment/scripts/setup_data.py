@@ -37,6 +37,7 @@ MODES_ACTIONS = {
         "download_snps_covariance_gtex_mashr",
     },
     "demo": {
+        "download_phenomexcan_unified_pheno_info",
         "download_phenomexcan_rapid_gwas_pheno_info",
         "download_phenomexcan_gtex_gwas_pheno_info",
         "download_phenomexcan_rapid_gwas_data_dict_file",
@@ -72,7 +73,7 @@ MODES_ACTIONS = {
 def download_phenomexcan_unified_pheno_info(**kwargs):
     output_file = conf.PHENOMEXCAN["UNIFIED_PHENO_INFO_FILE"]
     curl(
-        "https://upenn.box.com/shared/static/dnce4hhp37mubhxbn7d0u8wp9u280c9n.gz",
+        "https://zenodo.org/records/14976573/files/phenomexcan-phenotypes_info.tsv.gz?download=1",
         output_file,
         "2fdce9042244e13cc2952ec0cb3fd6d6",
         logger=logger,
