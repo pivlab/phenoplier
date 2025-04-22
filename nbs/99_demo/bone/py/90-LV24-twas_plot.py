@@ -18,8 +18,7 @@
 # # Description
 
 # %% [markdown]
-# COMPLETE
-# Generates a plot with TWAS associations using the top genes and traits for LV246 (related to the hypertension cluster).
+# Generates a plot with TWAS associations using the top genes and traits an LV (related to the hypertension cluster).
 
 # %% [markdown]
 # # Modules loading
@@ -50,9 +49,7 @@ LV_NAME_SELECTED = f"LV{LV_NUMBER_SELECTED}"
 display(LV_NAME_SELECTED)
 
 # %%
-OUTPUT_FIGURES_DIR = Path(
-    conf.MANUSCRIPT["FIGURES_DIR"], "lvs_analysis", f"lv{LV_NUMBER_SELECTED}"
-).resolve()
+OUTPUT_FIGURES_DIR = Path(conf.RESULTS_DIR, "demo", f"{LV_NAME_SELECTED.lower()}").resolve()
 display(OUTPUT_FIGURES_DIR)
 OUTPUT_FIGURES_DIR.mkdir(parents=True, exist_ok=True)
 

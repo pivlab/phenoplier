@@ -18,7 +18,7 @@
 # # Description
 
 # %% [markdown] tags=[]
-# Generates manubot tables for PhenomeXcan and eMERGE associations given an LV name (which is the only parameter that needs to be specified in the Settings section below).
+# It shows tables for PhenomeXcan and eMERGE associations given an LV name (which is the only parameter that needs to be specified in the Settings section below).
 
 # %% [markdown] tags=[]
 # # Modules loading
@@ -41,25 +41,6 @@ import conf
 
 # %% tags=["parameters"]
 LV_NAME = "LV24"
-
-# %%
-# assert (
-#     conf.MANUSCRIPT["BASE_DIR"] is not None
-# ), "The manuscript directory was not configured"
-
-# OUTPUT_FILE_PATH = conf.MANUSCRIPT["CONTENT_DIR"] / "50.00.supplementary_material.md"
-# display(OUTPUT_FILE_PATH)
-# assert OUTPUT_FILE_PATH.exists()
-
-# %%
-# result_set is either phenomexcan or emerge
-# LV_FILE_MARK_TEMPLATE = "<!-- {lv}:{result_set}_traits_assocs:{position} -->"
-
-# %%
-# TABLE_CAPTION = "Table: Significant trait associations of {lv_name} in {result_set_name}. {table_id}"
-
-# %%
-# TABLE_CAPTION_ID = "#tbl:sup:{result_set}_assocs:{lv_name_lower_case}"
 
 # %%
 RESULT_SET_NAMES = {
@@ -92,7 +73,7 @@ with pd.option_context(
 ):
     _tmp = phenomexcan_lv_trait_assocs[
         (phenomexcan_lv_trait_assocs["lv"] == "LV24")
-        & (phenomexcan_lv_trait_assocs["pvalue"] < 0.01)
+        & (phenomexcan_lv_trait_assocs["fdr"] < 0.05)
     ].sort_values("pvalue")
     
     display(_tmp)
@@ -306,8 +287,8 @@ result_set = "emerge"
 
 # %%
 lv_assocs = emerge_lv_trait_assocs[
-    (emerge_lv_trait_assocs["lv"] == LV_NAME) & (emerge_lv_trait_assocs["fdr"] < 0.05)
-].sort_values("fdr")
+    (emerge_lv_trait_assocs["lv"] == LV_NAME) & (emerge_lv_trait_assocs["pvalue"] < 0.01)
+].sort_values("pvalue")
 
 # %%
 with pd.option_context(
