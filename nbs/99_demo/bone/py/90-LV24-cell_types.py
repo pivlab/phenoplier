@@ -18,6 +18,11 @@
 # # Description
 
 # %% [markdown]
+# It explores the context/tissue/cell type of the top samples associated with an LV.
+#
+# Follow the notebook instructions below.
+
+# %% [markdown]
 # # Modules
 
 # %%
@@ -83,12 +88,6 @@ lv_obj = LVAnalysis(LV_NAME)
 # %%
 lv_obj.lv_genes.head(20)
 
-# %%
-print(" ".join(lv_obj.lv_genes.head(50)["gene_name"].tolist()))
-
-# %%
-print("\n".join(lv_obj.lv_genes.head(50)["gene_name"].tolist()))
-
 # %% [markdown]
 # Show the pathways our LV is aligned to (neutrophils):
 
@@ -148,9 +147,10 @@ lv_attrs[
 
 # %%
 lv_attrs_selected = [
-    "tissue/treatment id",
     "tissue type",
     "tissue",
+    "cell type",
+    "cell line",
 ]
 
 # %%
@@ -184,7 +184,7 @@ _tmp_seq[1]
 
 # %%
 # list the top 10 samples from this project
-lv_data.loc[["SRP015360"]].dropna(how="all", axis=1).sort_values(
+lv_data.loc[["SRP035864"]].dropna(how="all", axis=1).sort_values(
     LV_NAME, ascending=False
 ).head(10)
 
@@ -204,9 +204,10 @@ lv_data.loc[["SRP015360"]].dropna(how="all", axis=1).sort_values(
 
 # %%
 SELECTED_ATTRIBUTES = [
-    "tissue/treatment id",
     "tissue type",
     "tissue",
+    "cell type",
+    "cell line",
 ]
 
 # %% [markdown]
@@ -380,7 +381,7 @@ with pd.option_context(
     "display.max_rows", None, "display.max_columns", None, "display.max_colwidth", None
 ):
     _tmp = final_plot_data[
-        final_plot_data[SELECTED_ATTRIBUTES[0]].str.contains("normal skin")
+        final_plot_data[SELECTED_ATTRIBUTES[0]].str.contains("NOT CAT")
     ]
     display(_tmp.head(20))
 
@@ -388,13 +389,13 @@ with pd.option_context(
 # We don't have information about cell type/tissue for these.
 # But we can manually go to the URL showed before and check out.
 # For example, for `SRP015360` we can open our browser with this URL:
-# https://trace.ncbi.nlm.nih.gov/Traces/sra/?study=SRP015360, and see that the samples were taken from neutrophils.
+# https://trace.ncbi.nlm.nih.gov/Traces/sra/?study=SRP057087, and see that the samples were taken from neutrophils.
 #
 # If you need to see which information is provided by each SRP, you can again use the code below:
 
 # %%
 # what is there in these projects?
-lv_data.loc[["SRP050971"]].dropna(how="all", axis=1).sort_values(
+lv_data.loc[["SRP057087"]].dropna(how="all", axis=1).sort_values(
     LV_NAME, ascending=False
 ).head(60)
 
