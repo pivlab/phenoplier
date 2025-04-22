@@ -179,7 +179,7 @@ _tmp_seq[1]
 
 # %%
 # list the top 10 samples from this project
-lv_data.loc[["SRP015360"]].dropna(how="all", axis=1).sort_values(
+lv_data.loc[["SRP018256"]].dropna(how="all", axis=1).sort_values(
     LV_NAME, ascending=False
 ).head(10)
 
@@ -376,7 +376,7 @@ with pd.option_context(
     "display.max_rows", None, "display.max_columns", None, "display.max_colwidth", None
 ):
     _tmp = final_plot_data[
-        final_plot_data[SELECTED_ATTRIBUTES[0]].str.contains("MCF7")
+        final_plot_data[SELECTED_ATTRIBUTES[0]].str.contains("NOT CAT")
     ]
     display(_tmp.head(20))
 
@@ -384,13 +384,13 @@ with pd.option_context(
 # We don't have information about cell type/tissue for these.
 # But we can manually go to the URL showed before and check out.
 # For example, for `SRP015360` we can open our browser with this URL:
-# https://trace.ncbi.nlm.nih.gov/Traces/sra/?study=SRP015360, and see that the samples were taken from neutrophils.
+# https://trace.ncbi.nlm.nih.gov/Traces/sra/?study=SRP018256, and see that the samples were taken from neutrophils.
 #
 # If you need to see which information is provided by each SRP, you can again use the code below:
 
 # %%
 # what is there in these projects?
-lv_data.loc[["SRP013239"]].dropna(how="all", axis=1).sort_values(
+lv_data.loc[["SRP026204"]].dropna(how="all", axis=1).sort_values(
     LV_NAME, ascending=False
 ).head(60)
 
