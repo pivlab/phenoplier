@@ -362,11 +362,11 @@ with sns.plotting_context("paper", font_scale=1.5), sns.axes_style("whitegrid"):
     # You can save the figure if you uncomment the code below
     # the figure will be created under ${DATA_FOLDER}/results/demo
 
-#     plt.savefig(
-#         OUTPUT_CELL_TYPE_FILEPATH,
-#         bbox_inches="tight",
-#         facecolor="white",
-#     )
+    plt.savefig(
+        OUTPUT_CELL_TYPE_FILEPATH,
+        bbox_inches="tight",
+        facecolor="white",
+    )
 
 # %% [markdown]
 # # Debug

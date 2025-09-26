@@ -44,7 +44,7 @@ import conf
 # Specify below the LV id you are interested in:
 
 # %% tags=["parameters"]
-LV_NAME = "LV913"
+LV_NAME = "LV587"
 
 # %% [markdown] tags=[]
 # # Paths
@@ -147,9 +147,10 @@ lv_attrs[
 
 # %%
 lv_attrs_selected = [
-    "tissue",
-    "cell type",
     "cell line",
+    "cell type",
+    "tissue",
+    "cell subtype",
 ]
 
 # %%
@@ -182,10 +183,10 @@ _tmp_seq[1]
 # You can explore the metadata provided for a particular SPR with the code below. Let's see what we have in `SRP015360`:
 
 # %%
-# list the top 10 samples from this project
-lv_data.loc[["SRP039591"]].dropna(how="all", axis=1).sort_values(
-    LV_NAME, ascending=False
-).head(10)
+# # list the top 10 samples from this project
+# lv_data.loc[["SRP039591"]].dropna(how="all", axis=1).sort_values(
+#     LV_NAME, ascending=False
+# ).head(10)
 
 # %% [markdown]
 # So for `SRP015360` we only have three attributes: `age`, `Sex` and `treatment`. No cell type information. Here you can start grasping the challenges in analyzing this data.
@@ -203,9 +204,10 @@ lv_data.loc[["SRP039591"]].dropna(how="all", axis=1).sort_values(
 
 # %%
 SELECTED_ATTRIBUTES = [
-    "tissue",
-    "cell type",
     "cell line",
+    "cell type",
+    "tissue",
+    "cell subtype",
 ]
 
 # %% [markdown]
@@ -379,7 +381,7 @@ with pd.option_context(
     "display.max_rows", None, "display.max_columns", None, "display.max_colwidth", None
 ):
     _tmp = final_plot_data[
-        final_plot_data[SELECTED_ATTRIBUTES[0]].str.contains("skin")
+        final_plot_data[SELECTED_ATTRIBUTES[0]].str.contains("Detroit")
     ]
     display(_tmp.head(20))
 
@@ -387,13 +389,13 @@ with pd.option_context(
 # We don't have information about cell type/tissue for these.
 # But we can manually go to the URL showed before and check out.
 # For example, for `SRP015360` we can open our browser with this URL:
-# https://trace.ncbi.nlm.nih.gov/Traces/sra/?study=SRP009251, and see that the samples were taken from neutrophils.
+# https://trace.ncbi.nlm.nih.gov/Traces/sra/?study=SRP057205, and see that the samples were taken from neutrophils.
 #
 # If you need to see which information is provided by each SRP, you can again use the code below:
 
 # %%
 # what is there in these projects?
-lv_data.loc[["SRP009251"]].dropna(how="all", axis=1).sort_values(
+lv_data.loc[["SRP057205"]].dropna(how="all", axis=1).sort_values(
     LV_NAME, ascending=False
 ).head(60)
 

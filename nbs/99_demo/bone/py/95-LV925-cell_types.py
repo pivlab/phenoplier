@@ -357,11 +357,11 @@ with sns.plotting_context("paper", font_scale=1.5), sns.axes_style("whitegrid"):
     # You can save the figure if you uncomment the code below
     # the figure will be created under ${DATA_FOLDER}/results/demo
 
-#     plt.savefig(
-#         OUTPUT_CELL_TYPE_FILEPATH,
-#         bbox_inches="tight",
-#         facecolor="white",
-#     )
+    plt.savefig(
+        OUTPUT_CELL_TYPE_FILEPATH,
+        bbox_inches="tight",
+        facecolor="white",
+    )
 
 # %% [markdown]
 # # Debug
@@ -376,7 +376,7 @@ with pd.option_context(
     "display.max_rows", None, "display.max_columns", None, "display.max_colwidth", None
 ):
     _tmp = final_plot_data[
-        final_plot_data[SELECTED_ATTRIBUTES[0]].str.contains("NOT CAT")
+        final_plot_data[SELECTED_ATTRIBUTES[0]].str.contains("MCF7")
     ]
     display(_tmp.head(20))
 
@@ -390,7 +390,7 @@ with pd.option_context(
 
 # %%
 # what is there in these projects?
-lv_data.loc[["SRP026204"]].dropna(how="all", axis=1).sort_values(
+lv_data.loc[["SRP018256"]].dropna(how="all", axis=1).sort_values(
     LV_NAME, ascending=False
 ).head(60)
 
